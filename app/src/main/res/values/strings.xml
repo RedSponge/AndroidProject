@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyCoolApp</string>
+    <string name="enter_project">Enter</string>
+    <string name="placeholder_description">A description of the project</string>
+    <string name="placeholder_name">Name</string>
+    <string name="project_title_placeholder">Project Title</string>
+    <string name="project_description_placeholder">A Very Cool Description!</string>
+</resources>
