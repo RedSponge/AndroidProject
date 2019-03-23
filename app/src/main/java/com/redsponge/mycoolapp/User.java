@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private int id;
-    private final String name;
+    public int id;
+    public final String name;
     private final String pw;
 
     public User(int id, String name, String pw) {
@@ -16,14 +16,6 @@ public class User implements Serializable {
 
     public User(String name, String pw) {
         this(0, name, pw);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

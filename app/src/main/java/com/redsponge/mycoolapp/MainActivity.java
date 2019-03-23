@@ -17,17 +17,19 @@ public class MainActivity extends Activity {
     private ProjectsAdapter listAdapter;
     private ListView listView;
     private DatabaseHandler databaseHandler;
+    private int currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listAdapter = new ProjectsAdapter(this, new ArrayList<Project>());
+        currentUser = 1;
+
+        listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser);
 
         databaseHandler = new DatabaseHandler(this);
 
-        System.out.println(databaseHandler.getUser(1));
 
         listView = findViewById(R.id.my_list);
         listView.setAdapter(listAdapter);
@@ -37,11 +39,11 @@ public class MainActivity extends Activity {
 
     private void queryProjects() {
         listAdapter.clear();
-        for (Project project : databaseHandler.getAllProjects(1)) {
+        for (Project project : databaseHandler.getAllProjects(currentUser)) {
             listAdapter.add(project);
         }
 
-        String welcome = String.format(getString(R.string.placeholder_welcome), databaseHandler.getUser(1).getName());
+        String welcome = String.format(getString(R.string.placeholder_welcome), databaseHandler.getUser(currentUser).getName());
         ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
     }
 
@@ -59,6 +61,7 @@ public class MainActivity extends Activity {
 
     public void newProject(View view) {
         Intent intent = new Intent(this, NewProjectActivity.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 }

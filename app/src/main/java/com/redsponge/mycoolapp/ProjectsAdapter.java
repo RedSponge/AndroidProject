@@ -15,8 +15,11 @@ import java.util.ArrayList;
 
 public class ProjectsAdapter extends ArrayAdapter<Project> {
 
-    public ProjectsAdapter(Context context, ArrayList<Project> users) {
+    private int currentUser;
+
+    public ProjectsAdapter(Context context, ArrayList<Project> users, int currentUser) {
         super(context, R.layout.item_project, users);
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -46,8 +49,10 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
 
     private void buttonClicked(Project project) {
         Log.i(getClass().getName(), "Button Clicked!");
-        getContext().startActivity(new Intent(getContext(), ProjectActivity.class) {{
-            putExtra(Const.EXTRA_PROJECT, project);
-        }});
+        Intent intent = new Intent(getContext(), ProjectActivity.class);
+        intent.putExtra(Const.EXTRA_PROJECT, project);
+        intent.putExtra("currentUser", currentUser);
+
+        getContext().startActivity(intent);
     }
 }

@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHandler extends SQLiteOpenHelper implements Serializable{
+public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
     private static final int DATABASE_VERSION = 1;
@@ -115,26 +115,73 @@ public class DatabaseHandler extends SQLiteOpenHelper implements Serializable{
                         "WHERE users.user_id = " + user, null);
 
         while(cursor.moveToNext()) {
-            projects.add(new Project(cursor.getInt(0), cursor.getString(1), cursor.getString(1)));
+            projects.add(new Project(cursor.getInt(0), cursor.getString(1), cursor.getString(2)));
         }
 
         cursor.close();
         return projects;
     }
 
-    public void addProject(Project project) {
+    /**
+     * Adds a new project to the database
+     * @param project The project to add
+     * @return The new project's id
+     */
+    public int addProject(Project project) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(String.format("INSERT INTO projects (proj_name, proj_description) VALUES(\"%s\", \"%s\")", project.name, project.description));
+        Cursor c = db.rawQuery("SELECT proj_id FROM projects ORDER BY proj_id DESC", null);
+
+        c.moveToFirst();
+        int id = c.getInt(0);
+        c.close();
+
+        Log.i(getClass().getName(), "New project id is " + id);
+
         db.close();
+
+        return id;
     }
 
     public void linkProjectToUser(Project project, User user, boolean isAdmin) {
+        linkProjectToUser(project.id, user.id, isAdmin);
+    }
+
+    public void linkProjectToUser(int project, int user, boolean isAdmin) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(String.format("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(%s, %s, %s)", user.getId(), project.id, isAdmin ? 1 : 0));
+        db.execSQL(String.format("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(%s, %s, %s)", user, project, isAdmin ? 1 : 0));
         db.close();
     }
 
     public void restart() {
         onUpgrade(getWritableDatabase(), 0, 0);
+    }
+
+    public void deleteProject(Project project) {
+        deleteProject(project.id);
+    }
+
+    public void deleteProject(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM projects WHERE proj_id = " + id);
+    }
+
+    public boolean isUserAdmin(int currentUser, int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM users INNER JOIN projects, project_groups\n" +
+                "ON  project_groups.proj_id = projects.proj_id\n" +
+                "AND project_groups.user_id = users.user_id\n" +
+                "AND project_groups.admin = 1 AND projects.proj_id = " + id + " " +
+                "AND users.user_id = " + currentUser, null);
+        boolean isAdmin;
+
+        if(cursor.getCount() > 1) {
+            throw new RuntimeException("Shouldn't be more than one! " + cursor.getCount());
+        } else {
+            isAdmin = cursor.getCount() == 1;
+        }
+        cursor.close();
+        db.close();
+        return isAdmin;
     }
 }

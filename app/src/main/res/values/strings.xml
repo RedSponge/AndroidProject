@@ -7,4 +7,7 @@
     <string name="project_description_placeholder">A Very Cool Description!</string>
     <string name="placeholder_welcome">Welcome, %s</string>
     <string name="new_project_title">Create New Project</string>
+    <string name="project_name_hint">Project Name...</string>
+    <string name="project_name_prompt">Project Name:</string>
+    <string name="create_project_button">Create Project</string>
 </resources>
