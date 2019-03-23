@@ -30,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE users (\n" +
                 "    user_name TEXT UNIQUE NOT NULL,\n" +
-                "    user_password TEXT NOT NULL,\n" +
+                "    user_password INTEGER NOT NULL,\n" +
                 "    user_id INTEGER PRIMARY KEY AUTOINCREMENT \n" +
                 ");\n");
         db.execSQL("CREATE TABLE projects (\n" +
@@ -69,7 +69,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         final User user;
 
         if(cursor.moveToFirst()) {
-            user = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+            user = new User(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
         } else {
             user = null;
         }
@@ -100,7 +100,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addUser(User user) {
         SQLiteDatabase db = getWritableDatabase();
         try {
-            db.execSQL(String.format("INSERT INTO users (user_name, user_password) VALUES(\"%s\", \"%s\")", user.getName(), user.getPassword()));
+            db.execSQL(String.format("INSERT INTO users (user_name, user_password) VALUES(\"%s\", %s)", user.getName(), user.getPassword()));
+            Log.i(getClass().getName(), "Adding user: " + user);
         } catch (SQLiteConstraintException e) {
             Log.e(getClass().getName(), "Constraint Exception! Might be user name!", e);
         }

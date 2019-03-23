@@ -1,17 +1,26 @@
 package com.redsponge.mycoolapp;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
 
     public int id;
     public final String name;
-    private final String pw;
+    private final int pw;
+
+    public User(int id, String name, int pw) {
+        this.id = id;
+        this.name = name;
+        this.pw = pw; // Already Hashed
+    }
 
     public User(int id, String name, String pw) {
         this.id = id;
         this.name = name;
-        this.pw = pw;
+        this.pw = LoginUtils.hashPw(pw);
+        Log.i("User", "Hashed Password Is " + this.pw);
     }
 
     public User(String name, String pw) {
@@ -27,7 +36,7 @@ public class User implements Serializable {
         return String.format("%s,%s,%s", id, name, pw);
     }
 
-    public String getPassword() {
+    public int getPassword() {
         return pw;
     }
 }
