@@ -4,12 +4,31 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="10">
+    android:weightSum="11">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:id="@+id/status_bar"
+        >
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:text="@string/placeholder_welcome" android:gravity="center"
+        android:textSize="16sp" android:textStyle="bold"
+            android:id="@+id/welcome_message"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:text="Settings"
+            android:textSize="16sp"
+            android:layout_alignParentEnd="true" android:layout_marginEnd="0dp" android:onClick="enterSettings"/>
+    </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:text="This is a title!" android:gravity="center"
-        android:textSize="24sp" android:textStyle="bold"/>
+        android:layout_height="0dp" android:layout_weight="1" android:textSize="20sp" android:fontFamily="monospace" android:text="Your Projects" android:gravity="center"/>
     <ListView
         android:layout_width="match_parent"
         android:layout_weight="8"
@@ -18,5 +37,5 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="1"
-        android:text="Add A Howdy!" android:onClick="buttonClicked"/>
+        android:text="New Project!" android:onClick="newProject"/>
 </LinearLayout>

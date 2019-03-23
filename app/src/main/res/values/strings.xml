@@ -5,4 +5,6 @@
     <string name="placeholder_name">Name</string>
     <string name="project_title_placeholder">Project Title</string>
     <string name="project_description_placeholder">A Very Cool Description!</string>
+    <string name="placeholder_welcome">Welcome, %s</string>
+    <string name="new_project_title">Create New Project</string>
 </resources>

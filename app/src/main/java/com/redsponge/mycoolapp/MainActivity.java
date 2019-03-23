@@ -1,9 +1,12 @@
 package com.redsponge.mycoolapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
@@ -23,11 +26,6 @@ public class MainActivity extends Activity {
         listAdapter = new ProjectsAdapter(this, new ArrayList<Project>());
 
         databaseHandler = new DatabaseHandler(this);
-        databaseHandler.addUser(new User("RedSponge", "12345"));
-        databaseHandler.addUser(new User("BlueSponge", "54321"));
-
-        databaseHandler.addProject(new Project("Random Project", "Random Description"));
-        databaseHandler.linkProjectToUser(new Project(1, "Random Project", "Random Description"), databaseHandler.getUser("RedSponge"), true);
 
         System.out.println(databaseHandler.getUser(1));
 
@@ -38,12 +36,29 @@ public class MainActivity extends Activity {
     }
 
     private void queryProjects() {
+        listAdapter.clear();
         for (Project project : databaseHandler.getAllProjects(1)) {
             listAdapter.add(project);
         }
+
+        String welcome = String.format(getString(R.string.placeholder_welcome), databaseHandler.getUser(1).getName());
+        ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
     }
 
-    public void buttonClicked(View view) {
-        listAdapter.add(new Project(0, "Howdy", "Yay!"));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        queryProjects();
+    }
+
+    public void enterSettings(View view) {
+        Intent change = new Intent(this, SettingsActivity.class);
+        this.startActivity(change);
+    }
+
+
+    public void newProject(View view) {
+        Intent intent = new Intent(this, NewProjectActivity.class);
+        startActivity(intent);
     }
 }

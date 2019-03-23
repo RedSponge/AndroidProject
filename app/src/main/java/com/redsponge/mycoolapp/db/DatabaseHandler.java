@@ -10,10 +10,11 @@ import android.util.Log;
 import com.redsponge.mycoolapp.Project;
 import com.redsponge.mycoolapp.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper implements Serializable{
 
     private static final String DATABASE_NAME = "projects.db";
     private static final int DATABASE_VERSION = 1;
@@ -65,11 +66,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public User getUser(int id) {
         final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE user_id = " + id, null);
+        final User user;
 
-        cursor.moveToFirst();
-        User user = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-
+        if(cursor.moveToFirst()) {
+            user = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+        } else {
+            user = null;
+        }
         cursor.close();
+
         return user;
     }
 
@@ -127,5 +132,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(String.format("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(%s, %s, %s)", user.getId(), project.id, isAdmin ? 1 : 0));
         db.close();
+    }
+
+    public void restart() {
+        onUpgrade(getWritableDatabase(), 0, 0);
     }
 }
