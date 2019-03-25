@@ -1,5 +1,10 @@
 package com.redsponge.mycoolapp.login;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.redsponge.mycoolapp.R;
+
 public class LoginUtils {
 
     /**
@@ -15,4 +20,18 @@ public class LoginUtils {
         return hash;
     }
 
+    public static void registerCurrentUser(Context ctx, int id) {
+        SharedPreferences sp = ctx.getSharedPreferences(ctx.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        sp.edit().putInt("loggedInUser", id).apply();
+    }
+
+    public static void clearCurrentUser(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(ctx.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        sp.edit().remove("loggedInUser").apply();
+    }
+
+    public static int getCurrentUser(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(ctx.getString(R.string.shared_preferences_name), Context.MODE_PRIVATE);
+        return sp.getInt("loggedInUser", -1);
+    }
 }

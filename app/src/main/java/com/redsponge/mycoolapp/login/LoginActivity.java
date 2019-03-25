@@ -28,6 +28,14 @@ public class LoginActivity extends Activity {
         password = (EditText) findViewById(R.id.passwordInput);
 
         dbHandler = new DatabaseHandler(this);
+
+        int currentUser = LoginUtils.getCurrentUser(this);
+        if(currentUser != -1) {
+            Intent intent = new Intent(this, ProjectViewActivity.class);
+            intent.putExtra("currentUser", currentUser);
+            finish();
+            startActivity(intent);
+        }
     }
 
     public void tryLogin(View view) {

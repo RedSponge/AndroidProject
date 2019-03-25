@@ -56,6 +56,7 @@ public class RegisterActivity extends Activity {
 
         Intent intent = new Intent(this, ProjectViewActivity.class);
         intent.putExtra("currentUser", id);
+        LoginUtils.registerCurrentUser(this, id);
         startActivity(intent);
     }
 }
