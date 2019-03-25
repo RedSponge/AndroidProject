@@ -1,9 +1,10 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 public class SettingsActivity extends Activity{

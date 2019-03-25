@@ -1,18 +1,19 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.project;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.utils.SettingsActivity;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+public class ProjectViewActivity extends Activity {
 
     private ProjectsAdapter listAdapter;
     private ListView listView;
@@ -22,16 +23,16 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_project_view);
 
-        currentUser = 1;
+        currentUser = getIntent().getExtras().getInt("currentUser");
 
         listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser);
 
         databaseHandler = new DatabaseHandler(this);
 
 
-        listView = findViewById(R.id.my_list);
+        listView = (ListView) findViewById(R.id.my_list);
         listView.setAdapter(listAdapter);
 
         queryProjects();

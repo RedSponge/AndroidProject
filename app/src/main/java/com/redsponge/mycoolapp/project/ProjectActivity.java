@@ -1,15 +1,13 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.project;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 public class ProjectActivity extends Activity {
@@ -24,7 +22,7 @@ public class ProjectActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
-        this.project = (Project) getIntent().getExtras().get(Const.EXTRA_PROJECT);
+        this.project = (Project) getIntent().getExtras().get("project");
         this.currentUser = getIntent().getExtras().getInt("currentUser");
 
         dbHandler = new DatabaseHandler(this);
@@ -32,8 +30,8 @@ public class ProjectActivity extends Activity {
     }
 
     private void setupDisplay() {
-        this.title = findViewById(R.id.projectTitle);
-        this.description = findViewById(R.id.projectDescription);
+        this.title = (TextView) findViewById(R.id.projectTitle);
+        this.description = (TextView) findViewById(R.id.projectDescription);
 
         this.title.setText(project.name);
         this.description.setText(project.description);
@@ -42,10 +40,14 @@ public class ProjectActivity extends Activity {
     public void deleteProject(View view) {
         if(dbHandler.isUserAdmin(currentUser, project.id)) {
 
-            DialogInterface.OnClickListener listener = (dialog, which) -> {
-                if(which == DialogInterface.BUTTON_POSITIVE)
-                    dbHandler.deleteProject(project.id);
-                processDelete(project);
+            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(which == DialogInterface.BUTTON_POSITIVE) {
+                        dbHandler.deleteProject(project.id);
+                        processDelete(project);
+                    }
+                }
             };
 
             AlertDialog surePrompt = new AlertDialog.Builder(this)
@@ -58,7 +60,12 @@ public class ProjectActivity extends Activity {
             AlertDialog al = new AlertDialog.Builder(this)
                     .setTitle("Whoops!")
                     .setMessage("You do not have permission to do this!")
-                    .setPositiveButton("OK", ((dialog, which) -> dialog.dismiss()))
+                    .setPositiveButton("OK", (new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }))
                     .show();
         }
     }

@@ -1,12 +1,15 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.redsponge.mycoolapp.project.ProjectViewActivity;
+import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.utils.User;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 public class LoginActivity extends Activity {
@@ -21,11 +24,10 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        username = findViewById(R.id.usernameInput);
-        password = findViewById(R.id.passwordInput);
+        username = (EditText) findViewById(R.id.usernameInput);
+        password = (EditText) findViewById(R.id.passwordInput);
+
         dbHandler = new DatabaseHandler(this);
-        dbHandler.restart();
-        dbHandler.addUser(new User("EranG", "yesyes"));
     }
 
     public void tryLogin(View view) {
@@ -41,9 +43,16 @@ public class LoginActivity extends Activity {
 
         Log.i("", "" + hashedPw + " " + user);
         if(user != null && user.getPassword() == hashedPw) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Yay")
-                    .show();
+            Intent intent = new Intent(this, ProjectViewActivity.class);
+            intent.putExtra("currentUser", user.id);
+
+            finish();
+            startActivity(intent);
         }
+    }
+
+    public void enterRegister(View view) {
+        Intent i = new Intent(this, RegisterActivity.class);
+        startActivity(i);
     }
 }

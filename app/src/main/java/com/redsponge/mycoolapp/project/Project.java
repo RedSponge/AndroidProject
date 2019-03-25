@@ -1,4 +1,4 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.project;
 
 import java.io.Serializable;
 

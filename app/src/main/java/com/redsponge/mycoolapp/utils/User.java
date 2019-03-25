@@ -1,6 +1,8 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.utils;
 
 import android.util.Log;
+
+import com.redsponge.mycoolapp.login.LoginUtils;
 
 import java.io.Serializable;
 

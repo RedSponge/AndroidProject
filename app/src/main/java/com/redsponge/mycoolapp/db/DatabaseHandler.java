@@ -2,15 +2,13 @@ package com.redsponge.mycoolapp.db;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.redsponge.mycoolapp.Project;
-import com.redsponge.mycoolapp.User;
+import com.redsponge.mycoolapp.project.Project;
+import com.redsponge.mycoolapp.utils.User;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,15 +95,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return getUser(getUserId(name));
     }
 
-    public void addUser(User user) {
+    /**
+     * Adds a user to the database
+     * @param user The user to add
+     * @return The user's new id
+     */
+    public int addUser(User user) {
         SQLiteDatabase db = getWritableDatabase();
-        try {
-            db.execSQL(String.format("INSERT INTO users (user_name, user_password) VALUES(\"%s\", %s)", user.getName(), user.getPassword()));
-            Log.i(getClass().getName(), "Adding user: " + user);
-        } catch (SQLiteConstraintException e) {
-            Log.e(getClass().getName(), "Constraint Exception! Might be user name!", e);
-        }
+        db.execSQL(String.format("INSERT INTO users (user_name, user_password) VALUES(\"%s\", %s)", user.getName(), user.getPassword()));
+        Log.i(getClass().getName(), "Adding user: " + user);
+
+        Cursor c = db.rawQuery("SELECT user_id FROM users ORDER BY user_id DESC", null);
+
+        c.moveToFirst();
+        int id = c.getInt(0);
+        c.close();
         db.close();
+
+        return id;
     }
 
     public List<Project> getAllProjects(int user) {

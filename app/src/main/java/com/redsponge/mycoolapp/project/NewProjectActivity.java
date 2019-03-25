@@ -1,11 +1,11 @@
-package com.redsponge.mycoolapp;
+package com.redsponge.mycoolapp.project;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 public class NewProjectActivity extends Activity {
@@ -20,7 +20,7 @@ public class NewProjectActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_project);
 
-        nameInput = findViewById(R.id.projectNameInput);
+        nameInput = (EditText) findViewById(R.id.projectNameInput);
         dbHandler = new DatabaseHandler(this);
 
         currentUser = getIntent().getExtras().getInt("currentUser", -1);

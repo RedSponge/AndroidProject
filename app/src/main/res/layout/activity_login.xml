@@ -5,9 +5,7 @@
 
     <!-- Title -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="Welcome To The Cool App Thing!" android:textSize="24sp"
-        android:gravity="center"
+       style="@style/Title" android:text="Welcome To The Cool App!"
         android:layout_weight="1"/>
 
     <!-- Login Interface -->
@@ -48,6 +46,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="Register" android:textSize="20sp"
-            android:gravity="center" android:textColor="@color/colorPrimary"/>
+            android:clickable="true"
+            android:gravity="center" android:textColor="@color/colorPrimary" android:onClick="enterRegister"/>
     </LinearLayout>
 </LinearLayout>
