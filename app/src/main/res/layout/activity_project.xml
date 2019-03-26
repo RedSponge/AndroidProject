@@ -18,13 +18,36 @@
         android:layout_height="0dp"
         android:layout_weight="4.5">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/editDescription"
+            android:gravity="center_horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="16"
+                android:hint="Invite Someone Else To Project"
+                android:id="@+id/inviteNameInput"
+                android:layout_marginBottom="10dp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invite"
+                android:onClick="tryInviteUser"/>
+        </LinearLayout>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/deleteProject"
             android:layout_centerHorizontal="true"
-            android:text="Edit Project"
-            android:layout_marginBottom="10dp"/>
+            android:text="Edit Description"
+            android:id="@+id/editDescription"
+            android:layout_marginBottom="10dp"
+            android:onClick="editDescription"/>
 
         <Button
             android:id="@+id/deleteProject"

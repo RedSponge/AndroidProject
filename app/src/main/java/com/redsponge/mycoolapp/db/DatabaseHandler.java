@@ -6,62 +6,53 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.redsponge.mycoolapp.project.Invite;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.utils.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO NAMES ARE CASE INSENSITIVE!!
+
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
-    private static final int DATABASE_VERSION = 1;
-
-    private Context context;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE users (\n" +
-                "    user_name TEXT UNIQUE NOT NULL,\n" +
-                "    user_password INTEGER NOT NULL,\n" +
-                "    user_id INTEGER PRIMARY KEY AUTOINCREMENT \n" +
-                ");\n");
-        db.execSQL("CREATE TABLE projects (\n" +
-                "    proj_name TEXT NOT NULL,\n" +
-                "    proj_description TEXT NOT NULL,\n" +
-                "    proj_id INTEGER PRIMARY KEY AUTOINCREMENT\n" +
-                ");");
-        db.execSQL("CREATE TABLE project_groups (\n" +
-                "    proj_id INTEGER NOT NULL,\n" +
-                "    user_id INTEGER NOT NULL,\n" +
-                "    admin INTEGER NOT NULL DEFAULT 0,\n" +
-                "    FOREIGN KEY(proj_id) REFERENCES projects(proj_id),\n" +
-                "    FOREIGN KEY(user_id) REFERENCES users(user_id),\n" +
-                "    PRIMARY KEY(proj_id, user_id)" +
-                ")");
+        db.execSQL("CREATE " + Tables.TABLE_USERS);
+        db.execSQL("CREATE " + Tables.TABLE_PROJECTS);
+        db.execSQL("CREATE " + Tables.TABLE_PROJECT_GROUPS);
+        db.execSQL("CREATE " + Tables.TABLE_INVITES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS users");
-        db.execSQL("DROP TABLE IF EXISTS projects");
-        db.execSQL("DROP TABLE IF EXISTS project_groups");
-        onCreate(db);
+
+        if(oldVersion == 1 && newVersion == 2) {
+            db.execSQL("CREATE " + Tables.TABLE_INVITES);
+            Log.i(getClass().getName(), "Updated db to version 2: added invites");
+        } else {
+            restart();
+        }
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS users");
-        db.execSQL("DROP TABLE IF EXISTS projects");
-        db.execSQL("DROP TABLE IF EXISTS project_groups");
-        onCreate(db);
+        restart();
     }
 
+    /**
+     * Finds a user by id
+     * @param id The user's id
+     * @return The user
+     */
     public User getUser(int id) {
         final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE user_id = " + id, null);
         final User user;
@@ -77,22 +68,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Finds a user by name.
+     * Finds a user by name
      * @param name The user's name
-     * @return The user's id. -1 if the user doesn't exist.
+     * @return The user
      */
-    public int getUserId(String name) {
-        final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id FROM users WHERE user_name = \"" + name + "\"", null);
-        int id = -1;
+    public User getUser(String name) {
+        final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE user_name = ?", new String[]{name});
+        final User user;
+
         if(cursor.moveToFirst()) {
-            id = cursor.getInt(0);
+            user = new User(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+        } else {
+            user = null;
         }
         cursor.close();
-        return id;
-    }
 
-    public User getUser(String name) {
-        return getUser(getUserId(name));
+        return user;
     }
 
     /**
@@ -102,11 +93,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public int addUser(User user) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(String.format("INSERT INTO users (user_name, user_password) VALUES(\"%s\", %s)", user.getName(), user.getPassword()));
-        Log.i(getClass().getName(), "Adding user: " + user);
 
+        // Create user
+        db.execSQL("INSERT INTO users (user_name, user_password) VALUES(?, ?)",new Object[] {user.getName(), user.getPassword()});
+
+        // Fetch new id
         Cursor c = db.rawQuery("SELECT user_id FROM users ORDER BY user_id DESC", null);
-
         c.moveToFirst();
         int id = c.getInt(0);
         c.close();
@@ -115,6 +107,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return id;
     }
 
+    /**
+     * Gets all the projects of a user
+     * @param user The user to get all the projects of
+     * @return The projects of the user
+     */
     public List<Project> getAllProjects(int user) {
         ArrayList<Project> projects = new ArrayList<>();
 
@@ -137,50 +134,70 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public int addProject(Project project) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(String.format("INSERT INTO projects (proj_name, proj_description) VALUES(\"%s\", \"%s\")", project.name, project.description));
-        Cursor c = db.rawQuery("SELECT proj_id FROM projects ORDER BY proj_id DESC", null);
 
+        // Create project
+        db.execSQL("INSERT INTO projects (proj_name, proj_description) VALUES(?, ?)", new Object[] {project.name, project.description});
+
+        // Fetch new id
+        Cursor c = db.rawQuery("SELECT proj_id FROM projects ORDER BY proj_id DESC", null);
         c.moveToFirst();
         int id = c.getInt(0);
         c.close();
-
-        Log.i(getClass().getName(), "New project id is " + id);
 
         db.close();
 
         return id;
     }
 
-    public void linkProjectToUser(Project project, User user, boolean isAdmin) {
-        linkProjectToUser(project.id, user.id, isAdmin);
-    }
-
+    /**
+     * Links a project to a user
+     * @param project The project to link
+     * @param user The user to link
+     * @param isAdmin Should this user be registered as admin
+     */
     public void linkProjectToUser(int project, int user, boolean isAdmin) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(String.format("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(%s, %s, %s)", user, project, isAdmin ? 1 : 0));
+        db.execSQL("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(?, ?, ?)", new Object[] {user, project, isAdmin ? 1 : 0});
         db.close();
     }
 
+    /**
+     * Restarts the database
+     */
     public void restart() {
-        onUpgrade(getWritableDatabase(), 0, 0);
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.execSQL("DROP TABLE IF EXISTS users");
+        db.execSQL("DROP TABLE IF EXISTS projects");
+        db.execSQL("DROP TABLE IF EXISTS project_groups");
+
+        onCreate(db);
     }
 
-    public void deleteProject(Project project) {
-        deleteProject(project.id);
-    }
-
+    /**
+     * Removes the project and all of it's links
+     * @param id The project's id
+     */
     public void deleteProject(int id) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM projects WHERE proj_id = " + id);
+        db.execSQL("DELETE FROM project_groups WHERE proj_id = " + id);
+        db.close();
     }
 
-    public boolean isUserAdmin(int currentUser, int id) {
+    /**
+     * Checks if a user is an admin on a project
+     * @param user The user's id
+     * @param project The project's id
+     * @return Is the user an admin
+     */
+    public boolean isUserAdmin(int user, int project) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM users INNER JOIN projects, project_groups\n" +
                 "ON  project_groups.proj_id = projects.proj_id\n" +
                 "AND project_groups.user_id = users.user_id\n" +
-                "AND project_groups.admin = 1 AND projects.proj_id = " + id + " " +
-                "AND users.user_id = " + currentUser, null);
+                "AND project_groups.admin = 1 AND projects.proj_id = " + project + " " +
+                "AND users.user_id = \"" + user + "\"", null);
         boolean isAdmin;
 
         if(cursor.getCount() > 1) {
@@ -191,5 +208,71 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return isAdmin;
+    }
+
+    public void updateProjectDescription(int id, String description) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE projects SET proj_description = ? WHERE proj_id = ?", new Object[] {description, id});
+        db.close();
+    }
+
+    /**
+     * Adds a new invite to a project
+     * @param invite The invite
+     */
+    public void addInvite(Invite invite) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("INSERT INTO invites (from_id, to_id, proj_id, should_be_admin) VALUES (?, ?, ?, ?)", new Object[] {invite.idFrom, invite.idTo, invite.projectId, invite.shouldBeAdmin});
+        db.close();
+    }
+
+    /**
+     * Fetch all the invites for a user
+     * @param user The user to fetch the invites for
+     * @return The invites
+     */
+    public List<Invite> getInvites(int user) {
+        ArrayList<Invite> invites = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT from_id, to_id, proj_id, should_be_admin FROM invites WHERE to_id = " + user, null);
+
+        while(c.moveToNext()) {
+            invites.add(new Invite(c.getInt(0), c.getInt(1), c.getInt(2), c.getInt(3)));
+        }
+
+        c.close();
+        db.close();
+
+        return invites;
+    }
+
+    public int getInviteCount(int user) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(to_id) FROM invites WHERE to_id = " + user + " GROUP BY to_id", null);
+        int count = 0;
+        if(c.moveToFirst()) {
+            count = c.getInt(0);
+        }
+        c.close();
+        db.close();
+        return count;
+    }
+
+    /**
+     * Checks if a user is already invited to a project
+     * @param user The user to check
+     * @param project The project to check
+     * @return Is the user already invited to the project
+     */
+    public boolean isInvited(int user, int project) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM invites WHERE to_id = " + user + " AND proj_id = " + project, null);
+
+        int count = c.getCount();
+
+        c.close();
+
+        return count == 1;
     }
 }

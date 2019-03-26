@@ -12,4 +12,5 @@
     <string name="project_name_prompt">Project Name:</string>
     <string name="create_project_button">Create Project</string>
     <string name="shared_preferences_name">redsponge_proj_app_pref</string>
+    <string name="view_invites">View Invites! (%d)</string>
 </resources>

@@ -39,8 +39,6 @@ public class LoginActivity extends Activity {
         password = (EditText) findViewById(R.id.passwordInput);
         keepLoggedIn = (CheckBox) findViewById(R.id.keepLoggedIn);
         dbHandler = new DatabaseHandler(this);
-
-
     }
 
     public void tryLogin(View view) {
@@ -54,7 +52,6 @@ public class LoginActivity extends Activity {
         int hashedPw = LoginUtils.hashPw(password);
         User user = dbHandler.getUser(username);
 
-        Log.i("", "" + hashedPw + " " + user);
         if(user != null && user.getPassword() == hashedPw) {
             Intent intent = new Intent(this, ProjectViewActivity.class);
             intent.putExtra("currentUser", user.id);

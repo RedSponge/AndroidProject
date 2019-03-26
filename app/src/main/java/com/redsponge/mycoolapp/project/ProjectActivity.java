@@ -4,18 +4,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.User;
 
 public class ProjectActivity extends Activity {
 
     private Project project;
     private TextView title;
     private TextView description;
-    private DatabaseHandler dbHandler;
+
+    private EditText inviteUserInput;
+
+    private DatabaseHandler db;
     private int currentUser;
 
     @Override
@@ -25,27 +31,31 @@ public class ProjectActivity extends Activity {
         this.project = (Project) getIntent().getExtras().get("project");
         this.currentUser = getIntent().getExtras().getInt("currentUser");
 
-        dbHandler = new DatabaseHandler(this);
+        db = new DatabaseHandler(this);
         setupDisplay();
     }
 
     private void setupDisplay() {
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
+        this.inviteUserInput = (EditText) findViewById(R.id.inviteNameInput);
 
         this.title.setText(project.name);
         this.description.setText(project.description);
     }
 
+    /**
+     * Deletes a project (asks if sure first)
+     * @param view
+     */
     public void deleteProject(View view) {
-        if(dbHandler.isUserAdmin(currentUser, project.id)) {
+        if(db.isUserAdmin(currentUser, project.id)) {
 
             DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if(which == DialogInterface.BUTTON_POSITIVE) {
-                        dbHandler.deleteProject(project.id);
-                        processDelete(project);
+                        db.deleteProject(project.id);
                     }
                 }
             };
@@ -70,7 +80,57 @@ public class ProjectActivity extends Activity {
         }
     }
 
-    private void processDelete(Project proj) {
+    /**
+     * Shows a popup to edit the description of a project
+     */
+    public void editDescription(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("New Description");
 
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.requestFocus();
+
+        builder.setView(input);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String desc = input.getText().toString();
+                db.updateProjectDescription(project.id, desc);
+                project.description = desc;
+                setupDisplay();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    /**
+     * Tries to invite a user and displays the appropriate error message if cannot
+     */
+    public void tryInviteUser(View view) {
+        String name = inviteUserInput.getText().toString();
+        User query = db.getUser(name);
+        if(query != null && query.id != currentUser && !db.isInvited(query.id, project.id)) {
+            Invite invite = new Invite(currentUser, query.id, project.id, false);
+            db.addInvite(invite);
+            inviteUserInput.setError(null);
+        } else {
+            if(query == null) {
+                inviteUserInput.setError("Couldn't find user!");
+            } else if(query.id == currentUser) {
+                inviteUserInput.setError("You can't invite yourself!");
+            } else {
+                inviteUserInput.setError("This person is already invited!");
+            }
+        }
     }
 }

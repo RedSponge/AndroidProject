@@ -48,7 +48,13 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         });
 
         name.setText(project.name);
-        description.setText(project.description);
+
+        String descriptionText = project.description;
+        if(descriptionText.length() > 30) {
+            descriptionText = descriptionText.substring(0, 30) + "...";
+        }
+
+        description.setText(descriptionText);
 
         return convertView;
     }
