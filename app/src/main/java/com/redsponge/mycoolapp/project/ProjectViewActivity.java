@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.login.LoginActivity;
 import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.utils.SettingsActivity;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
@@ -27,7 +28,6 @@ public class ProjectViewActivity extends Activity {
         setContentView(R.layout.activity_project_view);
 
         currentUser = getIntent().getExtras().getInt("currentUser");
-        LoginUtils.registerCurrentUser(this, currentUser);
 
         listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser);
 
@@ -66,5 +66,12 @@ public class ProjectViewActivity extends Activity {
         Intent intent = new Intent(this, NewProjectActivity.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
+    }
+
+    public void logout(View view) {
+        LoginUtils.clearCurrentUser(this);
+        Intent backToLogin = new Intent(this, LoginActivity.class);
+        finish();
+        startActivity(backToLogin);
     }
 }

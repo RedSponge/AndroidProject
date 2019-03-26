@@ -23,8 +23,15 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent" android:text="Settings"
+            android:id="@+id/settingsButton"
             android:textSize="16sp"
             android:layout_alignParentEnd="true" android:layout_marginEnd="0dp" android:onClick="enterSettings"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:text="Log Out"
+            android:textSize="16sp" android:layout_toLeftOf="@id/settingsButton"
+            android:onClick="logout"/>
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"

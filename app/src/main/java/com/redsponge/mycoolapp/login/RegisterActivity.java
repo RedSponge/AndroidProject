@@ -1,6 +1,7 @@
 package com.redsponge.mycoolapp.login;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -49,14 +50,13 @@ public class RegisterActivity extends Activity {
     }
 
     private void createUser(String username, String password) {
-        AlertUtils.showAlert(this, "Success!", "Account created: " + username + "," + password);
+        AlertUtils.showAlert(this, "Success!", "Account created: " + username + "," + password, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
         User user = new User(username, password);
         int id = db.addUser(user);
-        finish();
-
-        Intent intent = new Intent(this, ProjectViewActivity.class);
-        intent.putExtra("currentUser", id);
-        LoginUtils.registerCurrentUser(this, id);
-        startActivity(intent);
     }
 }

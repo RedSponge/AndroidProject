@@ -5,21 +5,23 @@
 
     <!-- Title -->
     <TextView
-       style="@style/Title" android:text="Welcome To The Cool App!"
+       style="@style/Title" android:text="Welcome!"
         android:layout_weight="1"/>
 
     <!-- Login Interface -->
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="6">
+        android:layout_weight="6"
+        android:orientation="vertical">
 
         <EditText
             android:hint="Username"
             android:inputType="text"
             android:maxLength="16"
             style="@style/LoginInput"
+
             android:id="@+id/usernameInput"/>
 
         <EditText
@@ -28,12 +30,19 @@
             style="@style/LoginInput"
             android:id="@+id/passwordInput"/>
 
+        <CheckBox
+            android:id="@+id/keepLoggedIn"
+            android:text="Keep me logged in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:buttonTint="@color/colorPrimary"
+            />
         <Button
-            android:layout_marginTop="50dp"
             android:text="Login"
             style="@style/LoginInput" android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
             android:onClick="tryLogin"/>
-    </TableLayout>
+    </LinearLayout>
 
     <!-- Register -->
     <LinearLayout
