@@ -3,17 +3,28 @@ package com.redsponge.mycoolapp.project;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.ImageUtils;
 import com.redsponge.mycoolapp.utils.User;
 
 public class ProjectActivity extends Activity {
+
+    private static final int IMAGE_PICK_RESULT = 1;
 
     private Project project;
     private TextView title;
@@ -23,6 +34,8 @@ public class ProjectActivity extends Activity {
 
     private DatabaseHandler db;
     private int currentUser;
+
+    private ImageView imgView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +52,14 @@ public class ProjectActivity extends Activity {
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
         this.inviteUserInput = (EditText) findViewById(R.id.inviteNameInput);
+        this.imgView = (ImageView) findViewById(R.id.projectIcon);
 
         this.title.setText(project.name);
         this.description.setText(project.description);
+        String img = db.getIcon(project.id);
+        if(img != null) {
+            this.imgView.setImageBitmap(ImageUtils.decode(img));
+        }
     }
 
     /**
@@ -146,5 +164,39 @@ public class ProjectActivity extends Activity {
                 inviteUserInput.setError("This person is already a part of this project!");
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null) return;
+        if(requestCode == IMAGE_PICK_RESULT) {
+            Uri selectedImage = data.getData();
+
+            String[] filePathCol = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathCol, null, null, null);
+            c.moveToFirst();
+            int colIndex = c.getColumnIndex(filePathCol[0]);
+
+            String imgDecodableString = c.getString(colIndex);
+            c.close();
+
+            Bitmap bmp = BitmapFactory.decodeFile(imgDecodableString);
+            imgView.setImageBitmap(bmp);
+
+            db.setProjectIcon(project.id, ImageUtils.encode(bmp));
+        }
+    }
+
+    public void changeImage(View view) {
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(chooserIntent, IMAGE_PICK_RESULT);
     }
 }

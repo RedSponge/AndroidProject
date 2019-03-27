@@ -15,16 +15,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.ImageUtils;
 
 import java.util.ArrayList;
 
 public class ProjectsAdapter extends ArrayAdapter<Project> {
 
     private int currentUser;
+    private DatabaseHandler db;
 
-    public ProjectsAdapter(Context context, ArrayList<Project> users, int currentUser) {
+    public ProjectsAdapter(Context context, ArrayList<Project> users, int currentUser, DatabaseHandler db) {
         super(context, R.layout.item_project, users);
         this.currentUser = currentUser;
+        this.db = db;
     }
 
     @Override
@@ -44,6 +48,7 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         TextView description = (TextView) convertView.findViewById(R.id.projectDescription);
         Button enter = (Button) convertView.findViewById(R.id.gotoButton);
         ImageView image = (ImageView) convertView.findViewById(R.id.projectIcon);
+
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,10 +65,11 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
 
         description.setText(descriptionText);
 
-        String img = getContext().getString(R.string.eggplant);
-        byte[] decoded = Base64.decode(img, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
-        image.setImageBitmap(bitmap);
+        String icon = db.getIcon(project.id);
+        if(icon != null) {
+            image.setImageBitmap(ImageUtils.decode(icon));
+        }
+
         return convertView;
     }
 

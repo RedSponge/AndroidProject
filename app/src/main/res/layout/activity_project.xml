@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="6">
+    android:weightSum="7">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,10 +13,21 @@
         android:layout_height="0dp" android:layout_weight="0.5" android:text="@string/project_description_placeholder" android:gravity="center"
         android:id="@+id/projectDescription" android:textSize="18sp"/>
 
+    <ImageView
+        android:id="@+id/projectIcon"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:clickable="true"
+        android:onClick="changeImage"
+        android:scaleType="fitCenter"
+        android:src="@drawable/project_default_pic" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4.5">
+        android:layout_weight="3.5">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,29 +36,29 @@
             android:gravity="center_horizontal">
 
             <EditText
+                android:id="@+id/inviteNameInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLength="16"
-                android:hint="Invite Someone Else To Project"
-                android:id="@+id/inviteNameInput"
                 android:layout_marginBottom="10dp"
-                />
+                android:hint="Invite Someone Else To Project"
+                android:maxLength="16" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Invite"
-                android:onClick="tryInviteUser"/>
+                android:onClick="tryInviteUser"
+                android:text="Invite" />
         </LinearLayout>
 
         <Button
+            android:id="@+id/editDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/deleteProject"
             android:layout_centerHorizontal="true"
-            android:text="Edit Description"
-            android:id="@+id/editDescription"
             android:layout_marginBottom="10dp"
-            android:onClick="editDescription"/>
+            android:onClick="editDescription"
+            android:text="Edit Description" />
 
         <Button
             android:id="@+id/deleteProject"

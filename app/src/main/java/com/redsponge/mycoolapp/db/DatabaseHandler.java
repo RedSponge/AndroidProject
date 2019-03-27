@@ -18,7 +18,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,20 +32,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("CREATE " + Tables.TABLE_INVITES);
     }
 
+    public void deleteTables(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS users");
+        db.execSQL("DROP TABLE IF EXISTS projects");
+        db.execSQL("DROP TABLE IF EXISTS project_groups");
+        db.execSQL("DROP TABLE IF EXISTS invites");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        if(oldVersion == 1 && newVersion == 2) {
-            db.execSQL("CREATE " + Tables.TABLE_INVITES);
-            Log.i(getClass().getName(), "Updated db to version 2: added invites");
-        } else {
-            restart();
-        }
+        deleteTables(db);
+        onCreate(db);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        restart();
+        deleteTables(db);
+        onCreate(db);
     }
 
     /**
@@ -166,11 +169,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void restart() {
         SQLiteDatabase db = getWritableDatabase();
-
-        db.execSQL("DROP TABLE IF EXISTS users");
-        db.execSQL("DROP TABLE IF EXISTS projects");
-        db.execSQL("DROP TABLE IF EXISTS project_groups");
-
+        deleteTables(db);
         onCreate(db);
     }
 
@@ -319,5 +318,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.close();
         db.close();
         return isPart;
+    }
+
+    public String getIcon(int project) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT proj_icon FROM projects WHERE proj_id = " + project, null);
+        String icon = null;
+
+        if(c.moveToFirst()) {
+            icon = c.getString(0);
+        }
+        c.close();
+        db.close();
+
+        return icon;
+    }
+
+    public void setProjectIcon(int id, String base64) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE projects SET proj_icon = ? WHERE proj_id = ?", new Object[] {base64, id});
     }
 }

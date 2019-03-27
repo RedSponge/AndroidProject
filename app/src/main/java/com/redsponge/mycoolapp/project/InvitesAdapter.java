@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.ImageUtils;
 
 public class InvitesAdapter extends ArrayAdapter<Invite> {
 
@@ -36,7 +38,7 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
         TextView from = (TextView) convertView.findViewById(R.id.projectFrom);
         Button accept = (Button) convertView.findViewById(R.id.acceptButton);
         Button decline = (Button) convertView.findViewById(R.id.declineButton);
-
+        ImageView image = (ImageView) convertView.findViewById(R.id.projectIcon);
         name.setText(db.getProject(invite.projectId).name);
         from.setText(String.format(getContext().getString(R.string.placeholder_invite_from), db.getUser(invite.idFrom).name));
 
@@ -57,6 +59,10 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
             }
         });
 
+        String icon = db.getIcon(invite.projectId);
+        if(icon != null) {
+            image.setImageBitmap(ImageUtils.decode(icon));
+        }
 
         return convertView;
     }

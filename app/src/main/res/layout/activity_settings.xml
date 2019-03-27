@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:text="Wipe Database (ONLY USE IF YOU KNOW WHAT YOU'RE DOING!"
-        android:onClick="wipeDatabase"/>
+    android:layout_height="match_parent"
+    android:weightSum="4">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="1" android:text="Settings"
+        style="@style/ProjectsViewTitle"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="3">
+        <TableRow android:layout_weight="4">
+            <EditText android:hint="Change Username"
+                android:id="@+id/usernameChangeInput"
+                android:layout_width="0dp" android:layout_weight="3" />
+            <Button android:layout_weight="1" android:layout_width="0dp" android:text="Set" android:onClick="changeUsername"/>
+        </TableRow>
+
+        <TableRow android:layout_weight="4">
+            <EditText android:hint="Change Password"
+                android:id="@+id/passwordChangeInput"
+                android:inputType="textPassword"
+                android:layout_width="0dp" android:layout_weight="3" />
+            <Button android:layout_weight="1" android:layout_width="0dp" android:text="Set" android:onClick="changePassowrd"/>
+        </TableRow>
+
+    </TableLayout>
 </LinearLayout>

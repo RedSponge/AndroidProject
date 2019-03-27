@@ -23,7 +23,7 @@ public class ProjectViewActivity extends Activity {
 
     private ProjectsAdapter listAdapter;
     private ListView listView;
-    private DatabaseHandler databaseHandler;
+    private DatabaseHandler db;
     private int currentUser;
 
     @Override
@@ -33,9 +33,13 @@ public class ProjectViewActivity extends Activity {
 
         currentUser = getIntent().getExtras().getInt("currentUser");
 
-        listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser);
+        db = new DatabaseHandler(this);
+        listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser, db);
 
-        databaseHandler = new DatabaseHandler(this);
+        if(db.getUser(currentUser) == null) {
+            Log.i("", "NEYEHHEEHEH");
+            logout(null);
+        }
 
         listView = (ListView) findViewById(R.id.projectViewList);
         listView.setAdapter(listAdapter);
@@ -49,11 +53,11 @@ public class ProjectViewActivity extends Activity {
      */
     private void queryProjects() {
         listAdapter.clear();
-        for (Project project : databaseHandler.getAllProjects(currentUser)) {
+        for (Project project : db.getAllProjects(currentUser)) {
             listAdapter.add(project);
         }
 
-        String welcome = String.format(getString(R.string.placeholder_welcome), databaseHandler.getUser(currentUser).getName());
+        String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).getName());
         ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
     }
 
@@ -69,7 +73,7 @@ public class ProjectViewActivity extends Activity {
      */
     private void updateInvitesButton() {
         Button viewInvitesButton = (Button) findViewById(R.id.viewInvitesButton);
-        viewInvitesButton.setText(String.format(getString(R.string.view_invites), databaseHandler.getInviteCount(currentUser)));
+        viewInvitesButton.setText(String.format(getString(R.string.view_invites), db.getInviteCount(currentUser)));
     }
 
     /**

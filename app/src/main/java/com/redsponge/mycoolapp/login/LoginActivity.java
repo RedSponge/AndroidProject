@@ -62,6 +62,9 @@ public class LoginActivity extends Activity {
 
             finish();
             startActivity(intent);
+        } else {
+            this.username.setError("Unknown username or password!");
+            this.password.setError("Unknown username or password!");
         }
     }
 

@@ -14,6 +14,7 @@ public class Tables {
             "TABLE projects (\n" +
                 "proj_name TEXT NOT NULL,\n" +
                 "proj_description TEXT NOT NULL,\n" +
+                "proj_icon TEXT,\n" +
                 "proj_id INTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
 
