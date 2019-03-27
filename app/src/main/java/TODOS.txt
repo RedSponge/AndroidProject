@@ -1,0 +1,9 @@
+ - Turn names in login to case-insensitive
+
+ - Add category spinner
+ - Add category spinner listener to update the list whenever can
+ - Add category spinner in project view, needs to be per user
+
+ - Shout success when invite success
+ - Show list of people when trying to invite
+ - Extend invite view

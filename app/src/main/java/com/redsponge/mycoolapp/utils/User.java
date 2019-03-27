@@ -10,35 +10,27 @@ public class User implements Serializable {
 
     public int id;
     public final String name;
-    private final int pw;
+    public final int password;
 
-    public User(int id, String name, int pw) {
+    public User(int id, String name, int password) {
         this.id = id;
         this.name = name;
-        this.pw = pw; // Already Hashed
+        this.password = password; // Already Hashed
     }
 
-    public User(int id, String name, String pw) {
+    public User(int id, String name, String password) {
         this.id = id;
         this.name = name;
-        this.pw = LoginUtils.hashPw(pw);
-        Log.i("User", "Hashed Password Is " + this.pw);
+        this.password = LoginUtils.hashPw(password);
+        Log.i("User", "Hashed Password Is " + this.password);
     }
 
-    public User(String name, String pw) {
-        this(0, name, pw);
-    }
-
-    public String getName() {
-        return name;
+    public User(String name, String password) {
+        this(0, name, password);
     }
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s", id, name, pw);
-    }
-
-    public int getPassword() {
-        return pw;
+        return String.format("%s,%s,%s", id, name, password);
     }
 }

@@ -10,19 +10,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.login.LoginActivity;
 import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.utils.SettingsActivity;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 import java.util.ArrayList;
-
-// TODO Add invites page to display invites
 
 public class ProjectViewActivity extends Activity {
 
     private ProjectsAdapter listAdapter;
-    private ListView listView;
     private DatabaseHandler db;
     private int currentUser;
 
@@ -37,11 +34,10 @@ public class ProjectViewActivity extends Activity {
         listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser, db);
 
         if(db.getUser(currentUser) == null) {
-            Log.i("", "NEYEHHEEHEH");
             logout(null);
         }
 
-        listView = (ListView) findViewById(R.id.projectViewList);
+        ListView listView = (ListView) findViewById(R.id.projectViewList);
         listView.setAdapter(listAdapter);
 
         queryProjects();
@@ -57,7 +53,7 @@ public class ProjectViewActivity extends Activity {
             listAdapter.add(project);
         }
 
-        String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).getName());
+        String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).name);
         ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
     }
 
@@ -81,6 +77,7 @@ public class ProjectViewActivity extends Activity {
      */
     public void enterSettings(View view) {
         Intent change = new Intent(this, SettingsActivity.class);
+        change.putExtra("currentUser", currentUser);
         this.startActivity(change);
     }
 

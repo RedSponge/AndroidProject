@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Project implements Serializable {
 
-    public int id;
+    public final int id;
     public String name;
     public String description;
 

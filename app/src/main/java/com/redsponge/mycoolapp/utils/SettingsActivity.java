@@ -10,6 +10,9 @@ import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.login.LoginUtils;
+
+import java.util.Set;
 
 public class SettingsActivity extends Activity{
 
@@ -34,25 +37,47 @@ public class SettingsActivity extends Activity{
     }
 
     public void changeUsername(View view) {
-        if(assureUser()) {
-
-        }
+        assureUser(new Runnable() {
+            @Override
+            public void run() {
+                db.updateUserName(currentUser, usernameInput.getText().toString());
+            }
+        });
     }
 
-    private boolean assureUser() {
+    public void changePassword(View view) {
+        assureUser(new Runnable() {
+            @Override
+            public void run() {
+                db.updatePassword(currentUser, LoginUtils.hashPw(passwordInput.getText().toString()));
+            }
+        });
+
+    }
+    /**
+     * Checks if the user knows their password before executing code
+     * @param ifAssured The code to execute if the user has passed the check
+     */
+    private void assureUser(final Runnable ifAssured) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Enter current password:");
 
         final EditText input = new EditText(this);
+
         input.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.requestFocus();
 
         builder.setView(input);
-
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
                 String pw = input.getText().toString();
+                if(db.getUser(currentUser).password == LoginUtils.hashPw(pw)) {
+                    ifAssured.run();
+                } else {
+                    AlertUtils.showAlert(SettingsActivity.this, "Error", "Incorrect password!", null);
+                }
             }
         });
 
@@ -64,9 +89,5 @@ public class SettingsActivity extends Activity{
         });
 
         builder.show();
-    }
-
-    public void changePassword(View view) {
-
     }
 }

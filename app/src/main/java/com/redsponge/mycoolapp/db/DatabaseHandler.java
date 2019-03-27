@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import com.redsponge.mycoolapp.project.Category;
 import com.redsponge.mycoolapp.project.Invite;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.utils.User;
@@ -13,12 +13,10 @@ import com.redsponge.mycoolapp.utils.User;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO NAMES ARE CASE INSENSITIVE!!
-
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -26,17 +24,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE " + Tables.TABLE_USERS);
-        db.execSQL("CREATE " + Tables.TABLE_PROJECTS);
-        db.execSQL("CREATE " + Tables.TABLE_PROJECT_GROUPS);
-        db.execSQL("CREATE " + Tables.TABLE_INVITES);
+        db.execSQL("CREATE " + Tables.Users.DECLARATION);
+        db.execSQL("CREATE " + Tables.Projects.DECLARATION);
+        db.execSQL("CREATE " + Tables.ProjectGroups.DECLARATION);
+        db.execSQL("CREATE " + Tables.Invites.DECLARATION);
+        db.execSQL("CREATE " + Tables.Categories.DECLARATION);
+        db.execSQL("CREATE " + Tables.CategoryLinks.DECLARATION);
     }
 
-    public void deleteTables(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS users");
-        db.execSQL("DROP TABLE IF EXISTS projects");
-        db.execSQL("DROP TABLE IF EXISTS project_groups");
-        db.execSQL("DROP TABLE IF EXISTS invites");
+    /**
+     * Removes all tables from the database
+     * @param db The database
+     */
+    private void deleteTables(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.Users.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.Projects.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.ProjectGroups.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.Invites.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.Categories.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.CategoryLinks.NAME);
     }
 
     @Override
@@ -98,7 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         // Create user
-        db.execSQL("INSERT INTO users (user_name, user_password) VALUES(?, ?)",new Object[] {user.getName(), user.getPassword()});
+        db.execSQL("INSERT INTO users (user_name, user_password) VALUES(?, ?)",new Object[] {user.name, user.password});
 
         // Fetch new id
         Cursor c = db.rawQuery("SELECT user_id FROM users ORDER BY user_id DESC", null);
@@ -337,5 +343,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void setProjectIcon(int id, String base64) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE projects SET proj_icon = ? WHERE proj_id = ?", new Object[] {base64, id});
+        db.close();
+    }
+
+    /**
+     * Change's a user's username.
+     * @param id The user's id
+     * @param name The new name
+     */
+    public void updateUserName(int id, String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE users SET user_name = ? WHERE user_id = ?", new Object[] {name, id});
+        db.close();
+    }
+
+    /**
+     * Updates the password of a user
+     * @param id The user's id
+     * @param pw The new password, hashed.
+     */
+    public void updatePassword(int id, int pw) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE users SET user_password = ? WHERE user_id = ?", new Object[] {pw, id});
+        db.close();
+    }
+
+    /**
+     * Fetches all categories for a user
+     * @param user The user to fetch the categories for
+     * @return The categories of that user
+     */
+    public List<Category> getCategories(int user) {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Category> categories = new ArrayList<>();
+
+        Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user, null);
+
+        while(c.moveToNext()) {
+            categories.add(new Category(c.getInt(0), c.getString(1), c.getInt(2)));
+        }
+
+        c.close();
+        db.close();
+        return categories;
+    }
+
+    /**
+     * Adds a category to the database
+     * @param c The category to add, user is supplied through it
+     */
+    public void addCategory(Category c) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("INSERT INTO categories (category_name, user_id) VALUES(?, ?)", new Object[] {c.name, c.user});
+        db.close();
     }
 }

@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
         int hashedPw = LoginUtils.hashPw(password);
         User user = dbHandler.getUser(username);
 
-        if(user != null && user.getPassword() == hashedPw) {
+        if(user != null && user.password == hashedPw) {
             Intent intent = new Intent(this, ProjectViewActivity.class);
             intent.putExtra("currentUser", user.id);
 
