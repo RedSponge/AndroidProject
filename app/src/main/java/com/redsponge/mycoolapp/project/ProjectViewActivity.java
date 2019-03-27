@@ -37,7 +37,7 @@ public class ProjectViewActivity extends Activity {
 
         databaseHandler = new DatabaseHandler(this);
 
-        listView = (ListView) findViewById(R.id.my_list);
+        listView = (ListView) findViewById(R.id.projectViewList);
         listView.setAdapter(listAdapter);
 
         queryProjects();
@@ -104,6 +104,8 @@ public class ProjectViewActivity extends Activity {
      */
     public void viewInvites(View view) {
         Log.i(getClass().getName(), "Viewing invites!");
-        // TODO: View invites
+        Intent i = new Intent(this, InviteViewActivity.class);
+        i.putExtra("currentUser", currentUser);
+        startActivity(i);
     }
 }

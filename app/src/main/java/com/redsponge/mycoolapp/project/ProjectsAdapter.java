@@ -2,12 +2,16 @@ package com.redsponge.mycoolapp.project;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
@@ -39,7 +43,7 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         TextView name = (TextView) convertView.findViewById(R.id.projectName);
         TextView description = (TextView) convertView.findViewById(R.id.projectDescription);
         Button enter = (Button) convertView.findViewById(R.id.gotoButton);
-
+        ImageView image = (ImageView) convertView.findViewById(R.id.projectIcon);
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +60,10 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
 
         description.setText(descriptionText);
 
+        String img = getContext().getString(R.string.eggplant);
+        byte[] decoded = Base64.decode(img, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+        image.setImageBitmap(bitmap);
         return convertView;
     }
 

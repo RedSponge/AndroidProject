@@ -14,6 +14,7 @@ public class NewProjectActivity extends Activity {
     private DatabaseHandler dbHandler;
 
     private int currentUser;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

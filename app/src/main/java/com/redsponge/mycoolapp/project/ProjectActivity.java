@@ -119,17 +119,31 @@ public class ProjectActivity extends Activity {
     public void tryInviteUser(View view) {
         String name = inviteUserInput.getText().toString();
         User query = db.getUser(name);
-        if(query != null && query.id != currentUser && !db.isInvited(query.id, project.id)) {
+
+        boolean userExists = query != null;
+        boolean isSelf = false;
+        boolean isInvited = false;
+        boolean isPartOfProject = false;
+
+        if (query != null) {
+            isSelf = query.id == currentUser;
+            isInvited = db.isInvited(query.id, project.id);
+            isPartOfProject = db.isPartOfProject(query.id, project.id);
+        }
+
+        if(userExists && !isSelf && !isInvited && !isPartOfProject) {
             Invite invite = new Invite(currentUser, query.id, project.id, false);
             db.addInvite(invite);
             inviteUserInput.setError(null);
         } else {
-            if(query == null) {
+            if(!userExists) {
                 inviteUserInput.setError("Couldn't find user!");
-            } else if(query.id == currentUser) {
+            } else if(isSelf) {
                 inviteUserInput.setError("You can't invite yourself!");
-            } else {
+            } else if(isInvited){
                 inviteUserInput.setError("This person is already invited!");
+            } else /*if (isPartOfProject)*/ {
+                inviteUserInput.setError("This person is already a part of this project!");
             }
         }
     }

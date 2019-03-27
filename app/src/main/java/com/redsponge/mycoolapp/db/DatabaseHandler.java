@@ -275,4 +275,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return count == 1;
     }
+
+    /**
+     * Fetches a project from the database
+     * @param projectId The project's id
+     * @return The project
+     */
+    public Project getProject(int projectId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT proj_id, proj_name, proj_description FROM projects WHERE proj_id = " + projectId, null);
+        Project p = null;
+
+        if(c.moveToFirst()) {
+            p = new Project(c.getInt(0), c.getString(1), c.getString(2));
+        }
+
+        c.close();
+        db.close();
+        return p;
+    }
+
+    /**
+     * Removes an invitation from the database
+     * @param invite The invitation to remove
+     */
+    public void removeInvite(Invite invite) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM invites WHERE from_id = ? AND to_id = ? AND proj_id = ?", new Object[] {invite.idFrom, invite.idTo, invite.projectId});
+        db.close();
+    }
+
+    /**
+     * Checks if a user is linked to a project
+     * @param user The user to check
+     * @param project The project to check
+     * @return Is the user linked to the project
+     */
+    public boolean isPartOfProject(int user, int project) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user, null);
+        boolean isPart = c.getCount() == 1;
+        c.close();
+        db.close();
+        return isPart;
+    }
 }

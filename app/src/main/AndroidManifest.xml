@@ -15,6 +15,7 @@
         <activity android:name=".project.NewProjectActivity"/>
         <activity android:name=".project.ProjectViewActivity"/>
         <activity android:name=".login.RegisterActivity"/>
+        <activity android:name=".project.InviteViewActivity"/>
 
         <activity android:name=".login.LoginActivity">
             <intent-filter>
