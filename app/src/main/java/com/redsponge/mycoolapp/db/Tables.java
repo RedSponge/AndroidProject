@@ -69,7 +69,8 @@ public class Tables {
                     "category_id INTEGER NOT NULL,\n" +
                     "proj_id INTEGER NOT NULL,\n" +
                     "FOREIGN KEY(category_id) REFERENCES categories(category_id),\n" +
-                    "FOREIGN KEY(proj_id) REFERENCES projects(proj_id)\n" +
+                    "FOREIGN KEY(proj_id) REFERENCES projects(proj_id),\n" +
+                    "PRIMARY KEY(category_id, proj_id)" +
                 ")";
     }
 

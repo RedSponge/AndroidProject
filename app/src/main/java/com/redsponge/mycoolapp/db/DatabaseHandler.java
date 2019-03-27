@@ -4,10 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.redsponge.mycoolapp.project.Category;
-import com.redsponge.mycoolapp.project.Invite;
+import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.project.Project;
+import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.User;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -380,7 +382,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user, null);
 
         while(c.moveToNext()) {
-            categories.add(new Category(c.getInt(0), c.getString(1), c.getInt(2)));
+            categories.add(new Category(c.getInt(0), c.getString(1), c.getInt(2), this));
         }
 
         c.close();
@@ -396,5 +398,65 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO categories (category_name, user_id) VALUES(?, ?)", new Object[] {c.name, c.user});
         db.close();
+    }
+
+    public int getProjectAmount(int category, int user) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query;
+        if(category != Constants.CATEGORY_ALL_ID) {
+            query = "SELECT COUNT(proj_id) FROM category_links WHERE category_id = " + category + " GROUP BY category_id";
+        } else {
+            query = "SELECT COUNT(proj_id) FROM project_groups WHERE user_id = " + user + " GROUP BY user_id";
+        }
+        Log.i(getClass().getName(), query);
+        Cursor c = db.rawQuery(query, null);
+
+        int count = 0;
+        if(c.moveToFirst()) {
+            count = c.getInt(0);
+        }
+        c.close();
+        db.close();
+        return count;
+    }
+
+    public void linkProjectToCategory(int category, int project) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM category_links WHERE proj_id = ? AND category_id = ?", new Object[] {project, category});
+        if(category != Constants.CATEGORY_ALL_ID)
+            db.execSQL("INSERT INTO category_links (proj_id, category_id) VALUES(?, ?)", new Object[] {project, category});
+        Log.i(getClass().getName(), "Hey removed stuff i think!");
+        db.close();
+    }
+
+    public void unlinkProjectFromUserCategories(int project, int user) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM category_links\n" +
+                "WHERE category_links.proj_id IN (\n" +
+                "SELECT category_links.proj_id FROM category_links\n" +
+                "INNER JOIN categories ON categories.user_id = ? and category_links.proj_id = ?\n" +
+                "WHERE categories.category_id = category_links.category_id\n" +
+                ")\n", new Object[] {user, project});
+        db.close();
+    }
+
+    public List<Project> getProjectsForCategory(int user, int category) {
+        if(category == Constants.CATEGORY_ALL_ID) {
+            return getAllProjects(user);
+        }
+
+        SQLiteDatabase db = getReadableDatabase();
+        List<Project> projects = new ArrayList<Project>();
+        Cursor c = db.rawQuery("SELECT projects.proj_id, proj_name, proj_description FROM projects\n" +
+                "INNER JOIN category_links\n" +
+                "WHERE category_links.category_id = " + category + " AND category_links.proj_id = projects.proj_id", null);
+
+        while(c.moveToNext()) {
+            projects.add(new Project(c.getInt(0), c.getString(1), c.getString(2)));
+        }
+
+        c.close();
+        db.close();
+        return projects;
     }
 }

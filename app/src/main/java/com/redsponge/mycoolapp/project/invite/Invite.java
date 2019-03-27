@@ -1,4 +1,4 @@
-package com.redsponge.mycoolapp.project;
+package com.redsponge.mycoolapp.project.invite;
 
 /**
  * Represents an invitation

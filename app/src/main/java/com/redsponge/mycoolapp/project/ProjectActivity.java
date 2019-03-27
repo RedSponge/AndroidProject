@@ -11,14 +11,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.invite.Invite;
+import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 import com.redsponge.mycoolapp.utils.User;
 
@@ -198,5 +202,36 @@ public class ProjectActivity extends Activity {
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
         startActivityForResult(chooserIntent, IMAGE_PICK_RESULT);
+    }
+
+    public void editCategory(View view) {
+        final Spinner spinner = new Spinner(this);
+        final ArrayAdapter<Category> options = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(options);
+
+        options.add(new Category(Constants.CATEGORY_ALL_ID, "None", currentUser, db));
+        options.addAll(db.getCategories(currentUser));
+
+        new AlertDialog.Builder(this)
+                .setTitle("Change Category")
+                .setView(spinner)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Category selected = (Category) spinner.getSelectedItem();
+                        if(selected.id == Constants.CATEGORY_ALL_ID) {
+                            db.unlinkProjectFromUserCategories(project.id, currentUser);
+                        } else {
+                            db.linkProjectToCategory(((Category) spinner.getSelectedItem()).id, project.id);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 }

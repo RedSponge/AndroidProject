@@ -1,9 +1,24 @@
+
+ Logins:
  - Turn names in login to case-insensitive
 
- - Add category spinner
- - Add category spinner listener to update the list whenever can
- - Add category spinner in project view, needs to be per user
+ Categories:
+ - Add and remove category buttons in ProjectViewActivity
 
+ Invitations:
  - Shout success when invite success
  - Show list of people when trying to invite
  - Extend invite view
+
+ Projects:
+ - Add all options to NewProjectActivity
+ - MAYBE: add current status to projects, can be selected from many types, not entered by hand
+ - Work out permissions
+
+
+ General:
+ - Ask people for polish ideas
+ - See if can beautify buttons
+ - Refactor messy code, especially the Database Handler
+
+
