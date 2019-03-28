@@ -416,7 +416,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             query = "SELECT COUNT(proj_id) FROM project_groups WHERE user_id = " + user + " GROUP BY user_id";
         }
-        Log.i(getClass().getName(), query);
         Cursor c = db.rawQuery(query, null);
 
         int count = 0;
@@ -438,7 +437,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM category_links WHERE proj_id = ? AND category_id = ?", new Object[] {project, category});
         if(category != Constants.CATEGORY_ALL_ID)
             db.execSQL("INSERT INTO category_links (proj_id, category_id) VALUES(?, ?)", new Object[] {project, category});
-        Log.i(getClass().getName(), "Hey removed stuff i think!");
+
+
         db.close();
     }
 
@@ -538,5 +538,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user);
         db.close();
         unlinkProjectFromUserCategories(project, user);
+    }
+
+    public boolean isProjectInCategory(int project, int category) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM category_links WHERE proj_id = " + project + " AND category_id = " + category, null);
+
+        boolean inside = c.getCount() == 1;
+
+        c.close();
+        db.close();
+
+        return inside;
     }
 }

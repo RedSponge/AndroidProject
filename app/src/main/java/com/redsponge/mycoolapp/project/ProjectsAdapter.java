@@ -2,12 +2,6 @@ package com.redsponge.mycoolapp.project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +49,7 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonClicked(project);
+                enterProject(project);
             }
         });
 
@@ -78,8 +72,8 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         return convertView;
     }
 
-    private void buttonClicked(Project project) {
-        Log.i(getClass().getName(), "Button Clicked!");
+    private void enterProject(Project project) {
+
         Intent intent = new Intent(getContext(), ProjectActivity.class);
         intent.putExtra("project", project);
         intent.putExtra("currentUser", currentUser);

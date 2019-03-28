@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -255,6 +256,13 @@ public class ProjectActivity extends Activity {
 
         options.add(new Category(Constants.CATEGORY_ALL_ID, "None", currentUser, db));
         options.addAll(db.getCategories(currentUser));
+
+        for(int i = 1; i < options.getCount(); i++) { // Skip category None
+            Category c = options.getItem(i);
+            if(db.isProjectInCategory(project.id, c.id)) {
+                spinner.setSelection(i);
+            }
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle("Change Category")

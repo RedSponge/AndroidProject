@@ -22,7 +22,6 @@ public class User implements Serializable {
         this.id = id;
         this.name = name;
         this.password = LoginUtils.hashPw(password);
-        Log.i("User", "Hashed Password Is " + this.password);
     }
 
     public User(String name, String password) {

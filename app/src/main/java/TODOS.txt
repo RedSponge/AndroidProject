@@ -12,7 +12,7 @@
  NOT NOW   - Work out permissions
 
  Categories:
- - When choosing category in ProjectActivity, the current activity should be the one selected
+ << - When choosing category in ProjectActivity, the current activity should be the one selected >>
 
  General:
  - Ask people for polish ideas

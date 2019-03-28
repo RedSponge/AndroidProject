@@ -157,7 +157,6 @@ public class ProjectViewActivity extends Activity {
      * Called when the view invites button is pressed
      */
     public void viewInvites(View view) {
-        Log.i(getClass().getName(), "Viewing invites!");
         Intent i = new Intent(this, InviteViewActivity.class);
         i.putExtra("currentUser", currentUser);
         startActivity(i);
