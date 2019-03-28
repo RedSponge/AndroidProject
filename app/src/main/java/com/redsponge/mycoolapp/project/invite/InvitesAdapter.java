@@ -40,6 +40,7 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
         Button decline = (Button) convertView.findViewById(R.id.declineButton);
         ImageView image = (ImageView) convertView.findViewById(R.id.projectIcon);
         name.setText(db.getProject(invite.projectId).name);
+
         from.setText(String.format(getContext().getString(R.string.placeholder_invite_from), db.getUser(invite.idFrom).name));
 
         accept.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +63,8 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
         String icon = db.getIcon(invite.projectId);
         if(icon != null) {
             image.setImageBitmap(ImageUtils.decode(icon));
+        } else {
+            image.setImageDrawable(getContext().getResources().getDrawable(R.drawable.project_default_pic));
         }
 
         return convertView;

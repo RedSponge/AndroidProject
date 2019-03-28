@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ public class ProjectActivity extends Activity {
     private TextView title;
     private TextView description;
 
-    private EditText inviteUserInput;
+    private AutoCompleteTextView inviteUserInput;
 
     private DatabaseHandler db;
     private int currentUser;
@@ -58,7 +59,7 @@ public class ProjectActivity extends Activity {
     private void setupDisplay() {
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
-        this.inviteUserInput = (EditText) findViewById(R.id.inviteNameInput);
+        this.inviteUserInput = (AutoCompleteTextView) findViewById(R.id.inviteNameInput);
         this.imgView = (ImageView) findViewById(R.id.projectIcon);
         this.deleteButton = (Button) findViewById(R.id.deleteProject);
         this.title.setText(project.name);
@@ -70,6 +71,9 @@ public class ProjectActivity extends Activity {
         }
 
         this.deleteButton.setEnabled(db.isUserAdmin(currentUser, project.id));
+
+        ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.id));
+        inviteUserInput.setAdapter(names);
     }
 
     /**

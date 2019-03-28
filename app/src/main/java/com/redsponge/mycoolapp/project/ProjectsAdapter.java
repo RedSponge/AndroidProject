@@ -71,6 +71,8 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
         String icon = db.getIcon(project.id);
         if(icon != null) {
             image.setImageBitmap(ImageUtils.decode(icon));
+        } else {
+            image.setImageDrawable(getContext().getResources().getDrawable(R.drawable.project_default_pic));
         }
 
         return convertView;

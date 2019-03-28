@@ -1,12 +1,15 @@
  Invitations:
  << - Shout success when invite success >>
- - Show list of people when trying to invite
+ << - Show list of people when trying to invite >>
  - Extend invite view
 
  Projects:
  - Add all options to NewProjectActivity
  - MAYBE: add current status to projects, can be selected from many types, not entered by hand
  - Work out permissions
+
+ Categories:
+ - When choosing category in ProjectActivity, the current activity should be the one selected
 
  General:
  - Ask people for polish ideas

@@ -31,6 +31,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s", id, name, password);
+        return name;
     }
 }

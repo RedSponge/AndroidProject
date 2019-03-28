@@ -506,4 +506,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM categories WHERE category_id = " + category);
         db.close();
     }
+
+    public List<User> getAllUsers() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<User> users = new ArrayList<User>();
+
+        Cursor c = db.rawQuery("SELECT user_id, user_name, user_password FROM users", null);
+        while(c.moveToNext()) {
+            users.add(new User(c.getInt(0), c.getString(1), c.getInt(2)));
+        }
+
+        c.close();
+        db.close();
+
+        return users;
+    }
+
+    public List<User> getUnInvitedUsers(int project) {
+
+        List<User> users = new ArrayList<User>();
+        for(User u : getAllUsers()) {
+            if(!isInvited(u.id, project) && !isPartOfProject(u.id, project)) {
+                users.add(u);
+            }
+        }
+        return users;
+    }
 }
