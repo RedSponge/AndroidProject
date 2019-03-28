@@ -70,17 +70,50 @@ public class ProjectActivity extends Activity {
             this.imgView.setImageBitmap(ImageUtils.decode(img));
         }
 
-        this.deleteButton.setEnabled(db.isUserAdmin(currentUser, project.id));
+        if(db.isUserAdmin(currentUser, project.id)) {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteProject();
+                }
+            });
+        } else {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    leaveProject();
+                }
+            });
+            deleteButton.setText("Leave Project");
+        }
 
         ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.id));
         inviteUserInput.setAdapter(names);
     }
 
+    private void leaveProject() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which == DialogInterface.BUTTON_POSITIVE) {
+                    db.unlinkProjectFromUser(project.id, currentUser);
+                    finish();
+                }
+            }
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle("Warning")
+                .setMessage("You cannot rejoin the project unless you're re-invited! Are you sure?")
+                .setPositiveButton("Yes", listener)
+                .setNegativeButton("No", listener)
+                .show();
+    }
+
     /**
      * Deletes a project (asks if sure first)
-     * @param view
      */
-    public void deleteProject(View view) {
+    public void deleteProject() {
         if(db.isUserAdmin(currentUser, project.id)) {
 
             DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -93,7 +126,7 @@ public class ProjectActivity extends Activity {
                 }
             };
 
-            AlertDialog surePrompt = new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Warning")
                     .setMessage("Deleting a project is permanent! Are you sure?")
                     .setPositiveButton("Yes", listener)

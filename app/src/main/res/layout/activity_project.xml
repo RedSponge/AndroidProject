@@ -77,7 +77,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:onClick="deleteProject"
             android:text="Delete Project" />
     </RelativeLayout>
 </LinearLayout>

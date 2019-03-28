@@ -32,8 +32,8 @@ public class NewProjectActivity extends Activity {
             throw new RuntimeException("Current User Wasn't Passed!");
         }
 
-        nameInput.setText("New Project!");
-        descriptionInput.setText("A Masterpiece");
+        nameInput.setText(ProjectTemplates.getRandomName());
+        descriptionInput.setText(ProjectTemplates.getRandomDescription());
 
         nameInput.requestFocus();
     }

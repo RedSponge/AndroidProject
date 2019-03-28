@@ -532,4 +532,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return users;
     }
+
+    public void unlinkProjectFromUser(int project, int user) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user);
+        db.close();
+        unlinkProjectFromUserCategories(project, user);
+    }
 }

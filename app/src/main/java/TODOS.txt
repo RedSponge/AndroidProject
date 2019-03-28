@@ -5,11 +5,11 @@
 
  Projects:
  << -  Add all options to NewProjectActivity >>
- - Change delete project to leave project when not admin
- - Add random descriptions to auto-complete in new projects
+ << - Change delete project to leave project when not admin >>
+ << - Add random descriptions to auto-complete in new projects >>
 
- - MAYBE: add current status to projects, can be selected from many types, not entered by hand
- - Work out permissions
+ NOT NOW   - MAYBE: add current status to projects, can be selected from many types, not entered by hand
+ NOT NOW   - Work out permissions
 
  Categories:
  - When choosing category in ProjectActivity, the current activity should be the one selected
