@@ -68,7 +68,7 @@ public class SettingsActivity extends Activity{
 
         final EditText input = new EditText(this);
 
-        input.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.requestFocus();
 
         builder.setView(input);
