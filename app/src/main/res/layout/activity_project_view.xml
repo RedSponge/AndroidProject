@@ -35,7 +35,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="2">
+        android:layout_height="0dp" android:layout_weight="2.25">
         <TextView
             android:layout_width="wrap_content"
             android:layout_marginEnd="30dp"
@@ -60,26 +60,28 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:weightSum="2">
+
+            android:layout_below="@+id/categorySelector">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Add Category"
+                android:layout_height="match_parent" android:text="Add Category"
                 android:onClick="addCategory"
-
+                android:textSize="16dp"
                 />
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Delete Category"
+                android:layout_height="match_parent" android:text="Delete Category"
                 android:onClick="deleteCategory"
                 android:id="@+id/deleteCategoryButton"
+                android:textSize="16dp"
                 />
         </LinearLayout>
     </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_weight="7"
+        android:layout_weight="6.75"
         android:layout_height="0dp" android:id="@+id/projectViewList">
     </ListView>
 
