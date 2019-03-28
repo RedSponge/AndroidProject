@@ -1,14 +1,3 @@
- Top Importance:
- <<< - Document changes from yesterday DONE >>>
-
- Logins:
- <<< - Turn names in login to case-insensitive >>>
-
- Categories:
- - << Add and remove category buttons in ProjectViewActivity >>
- - When project is deleted remove category links to it
-
-
  Invitations:
  - Shout success when invite success
  - Show list of people when trying to invite

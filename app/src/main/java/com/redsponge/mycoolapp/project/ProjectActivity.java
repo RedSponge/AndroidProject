@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -40,6 +41,7 @@ public class ProjectActivity extends Activity {
     private int currentUser;
 
     private ImageView imgView;
+    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +59,16 @@ public class ProjectActivity extends Activity {
         this.description = (TextView) findViewById(R.id.projectDescription);
         this.inviteUserInput = (EditText) findViewById(R.id.inviteNameInput);
         this.imgView = (ImageView) findViewById(R.id.projectIcon);
-
+        this.deleteButton = (Button) findViewById(R.id.deleteProject);
         this.title.setText(project.name);
         this.description.setText(project.description);
+
         String img = db.getIcon(project.id);
         if(img != null) {
             this.imgView.setImageBitmap(ImageUtils.decode(img));
         }
+
+        this.deleteButton.setEnabled(db.isUserAdmin(currentUser, project.id));
     }
 
     /**
