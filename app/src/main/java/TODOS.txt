@@ -1,5 +1,5 @@
  Invitations:
- - Shout success when invite success
+ << - Shout success when invite success >>
  - Show list of people when trying to invite
  - Extend invite view
 

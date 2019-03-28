@@ -23,6 +23,7 @@ import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
+import com.redsponge.mycoolapp.utils.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 import com.redsponge.mycoolapp.utils.User;
@@ -162,7 +163,7 @@ public class ProjectActivity extends Activity {
         if(userExists && !isSelf && !isInvited && !isPartOfProject) {
             Invite invite = new Invite(currentUser, query.id, project.id, false);
             db.addInvite(invite);
-            inviteUserInput.setError(null);
+            AlertUtils.showAlert(this, "Success", query.name + " successfully invited!", null);
         } else {
             if(!userExists) {
                 inviteUserInput.setError("Couldn't find user!");
