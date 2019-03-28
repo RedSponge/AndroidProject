@@ -187,6 +187,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void deleteProject(int id) {
         SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM category_links WHERE proj_id = " + id);
         db.execSQL("DELETE FROM projects WHERE proj_id = " + id);
         db.execSQL("DELETE FROM project_groups WHERE proj_id = " + id);
         db.close();
@@ -482,5 +483,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
         return projects;
+    }
+
+    public Category getCategory(int user, String category) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user + " AND lower(category_name) = \"" + category.toLowerCase() + "\"", null);
+        Category cat = null;
+
+        if(c.moveToFirst()) {
+            cat = new Category(c.getInt(0), c.getString(1), c.getInt(2), this);
+        }
+
+        c.close();
+        db.close();
+
+        return cat;
+    }
+
+    public void deleteCategory(int category) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM category_links WHERE category_id = " + category);
+        db.execSQL("DELETE FROM categories WHERE category_id = " + category);
+        db.close();
     }
 }

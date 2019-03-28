@@ -2,10 +2,12 @@
  <<< - Document changes from yesterday DONE >>>
 
  Logins:
- - Turn names in login to case-insensitive
+ <<< - Turn names in login to case-insensitive >>>
 
  Categories:
- - Add and remove category buttons in ProjectViewActivity
+ - << Add and remove category buttons in ProjectViewActivity >>
+ - When project is deleted remove category links to it
+
 
  Invitations:
  - Shout success when invite success
@@ -16,7 +18,6 @@
  - Add all options to NewProjectActivity
  - MAYBE: add current status to projects, can be selected from many types, not entered by hand
  - Work out permissions
-
 
  General:
  - Ask people for polish ideas

@@ -78,6 +78,7 @@ public class ProjectActivity extends Activity {
                 public void onClick(DialogInterface dialog, int which) {
                     if(which == DialogInterface.BUTTON_POSITIVE) {
                         db.deleteProject(project.id);
+                        finish();
                     }
                 }
             };

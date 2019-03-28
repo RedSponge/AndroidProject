@@ -32,13 +32,14 @@
             android:textSize="16sp" android:layout_toLeftOf="@id/settingsButton"
             android:onClick="logout"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1">
+        android:layout_height="0dp" android:layout_weight="2">
         <TextView
             android:layout_width="wrap_content"
             android:layout_marginEnd="30dp"
-            android:layout_height="match_parent"  android:text="Your Projects"
+            android:layout_height="wrap_content"  android:text="Your Projects"
             android:id="@+id/projectsTitle"
             style="@style/ProjectsViewTitle"/>
         <TextView
@@ -46,16 +47,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:text="Category"
             android:layout_alignStart="@+id/categorySelector"
+            android:id="@+id/categoryTitle"
             android:gravity="center_horizontal"/>
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_toRightOf="@+id/projectsTitle"
             android:id="@+id/categorySelector"
-            android:layout_alignParentBottom="true"/>
+            android:layout_below="@+id/categoryTitle"/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:weightSum="2">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Add Category"
+                android:onClick="addCategory"
+
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Delete Category"
+                android:onClick="deleteCategory"
+                android:id="@+id/deleteCategoryButton"
+                />
+        </LinearLayout>
     </RelativeLayout>
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_weight="8"
+        android:layout_weight="7"
         android:layout_height="0dp" android:id="@+id/projectViewList">
     </ListView>
 
