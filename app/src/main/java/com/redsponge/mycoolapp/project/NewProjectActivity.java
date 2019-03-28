@@ -11,10 +11,11 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 public class NewProjectActivity extends Activity {
 
     private EditText nameInput;
+    private EditText descriptionInput;
+
     private DatabaseHandler dbHandler;
 
     private int currentUser;
-    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +23,24 @@ public class NewProjectActivity extends Activity {
         setContentView(R.layout.activity_new_project);
 
         nameInput = (EditText) findViewById(R.id.projectNameInput);
+        descriptionInput = (EditText) findViewById(R.id.projectDescriptionInput);
+
         dbHandler = new DatabaseHandler(this);
 
         currentUser = getIntent().getExtras().getInt("currentUser", -1);
         if(currentUser == -1) {
             throw new RuntimeException("Current User Wasn't Passed!");
         }
+
+        nameInput.setText("New Project!");
+        descriptionInput.setText("A Masterpiece");
+
+        nameInput.requestFocus();
     }
 
     public void createProject(View view) {
         String name = nameInput.getText().toString();
-        String description = "";
+        String description = descriptionInput.getText().toString();
 
         if(name.trim().equals("")) {
             return;
