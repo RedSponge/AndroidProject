@@ -37,6 +37,10 @@ public class SettingsActivity extends Activity{
     }
 
     public void changeUsername(View view) {
+        if(db.getUser(usernameInput.getText().toString()) != null) {
+            usernameInput.setError("Username already taken!");
+            return;
+        }
         assureUser(new Runnable() {
             @Override
             public void run() {

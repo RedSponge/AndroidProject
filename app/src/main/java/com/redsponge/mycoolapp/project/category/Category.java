@@ -2,6 +2,10 @@ package com.redsponge.mycoolapp.project.category;
 
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
+/**
+ * A category, which is used to sort projects into
+ * A project may be in many categories - one per user
+ */
 public class Category {
 
     public final String name;
@@ -23,6 +27,6 @@ public class Category {
 
     @Override
     public String toString() {
-        return name + " (" + db.getProjectAmount(id, user) + ")";
+        return name + " (" + db.getProjectAmountInCategory(id, user) + ")";
     }
 }

@@ -84,7 +84,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return The user
      */
     public User getUser(String name) {
-        final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE user_name = ?", new String[]{name});
+        final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE lower(user_name) = \"" + name.toLowerCase() + "\"", null);
         final User user;
 
         if(cursor.moveToFirst()) {
@@ -400,7 +400,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getProjectAmount(int category, int user) {
+
+    /**
+     * Returns the amount of projects in a category
+     * @param category The category's id, if equal to {@link Constants#CATEGORY_ALL_ID} then all projects of the user are counted
+     * @param user The user's id
+     * @return The amount of projects in that category
+     */
+    public int getProjectAmountInCategory(int category, int user) {
         SQLiteDatabase db = getReadableDatabase();
         String query;
         if(category != Constants.CATEGORY_ALL_ID) {
@@ -420,6 +427,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return count;
     }
 
+    /**
+     * Links a project to a category
+     * @param category The category to link the project to
+     * @param project The project to link to the category
+     */
     public void linkProjectToCategory(int category, int project) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM category_links WHERE proj_id = ? AND category_id = ?", new Object[] {project, category});
@@ -429,6 +441,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Unlinks a project from all categories of a user
+     * @param project The project to unlink
+     * @param user The user's id
+     */
     public void unlinkProjectFromUserCategories(int project, int user) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM category_links\n" +
@@ -440,6 +457,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Fetches all projects for a certain category
+     * @param user The user's id
+     * @param category The category, if equal to {@link Constants#CATEGORY_ALL_ID} then all projects are fetched
+     * @return A list containing all projects of that category
+     */
     public List<Project> getProjectsForCategory(int user, int category) {
         if(category == Constants.CATEGORY_ALL_ID) {
             return getAllProjects(user);
@@ -457,6 +480,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         c.close();
         db.close();
+
         return projects;
     }
 }
