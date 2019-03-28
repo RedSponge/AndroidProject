@@ -1,18 +1,4 @@
- Invitations:
- << - Shout success when invite success >>
- << - Show list of people when trying to invite >>
- << - Extend invite view >> ?
-
- Projects:
- << -  Add all options to NewProjectActivity >>
- << - Change delete project to leave project when not admin >>
- << - Add random descriptions to auto-complete in new projects >>
-
- NOT NOW   - MAYBE: add current status to projects, can be selected from many types, not entered by hand
- NOT NOW   - Work out permissions
-
- Categories:
- << - When choosing category in ProjectActivity, the current activity should be the one selected >>
+ - Prevent SQL Injection by using PreparedStatements
 
  General:
  - Ask people for polish ideas

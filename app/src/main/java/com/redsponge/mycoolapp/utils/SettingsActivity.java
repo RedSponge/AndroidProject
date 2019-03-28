@@ -5,14 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.login.LoginUtils;
-
-import java.util.Set;
 
 public class SettingsActivity extends Activity{
 
@@ -45,6 +44,7 @@ public class SettingsActivity extends Activity{
             @Override
             public void run() {
                 db.updateUserName(currentUser, usernameInput.getText().toString());
+                AlertUtils.showAlert(SettingsActivity.this, "Success!", "Changed your username to " + usernameInput.getText().toString(), null);
             }
         });
     }
@@ -54,10 +54,12 @@ public class SettingsActivity extends Activity{
             @Override
             public void run() {
                 db.updatePassword(currentUser, LoginUtils.hashPw(passwordInput.getText().toString()));
+                AlertUtils.showAlert(SettingsActivity.this, "Success!", "Changed your password to " + passwordInput.getText().toString(), null);
             }
         });
-
     }
+
+
     /**
      * Checks if the user knows their password before executing code
      * @param ifAssured The code to execute if the user has passed the check
@@ -68,7 +70,9 @@ public class SettingsActivity extends Activity{
 
         final EditText input = new EditText(this);
 
-        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
         input.requestFocus();
 
         builder.setView(input);
