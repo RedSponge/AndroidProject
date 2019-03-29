@@ -1,5 +1,1 @@
- General:
- - Ask people for polish ideas
- - Refactor messy code, especially the Database Handler
-
-
+Fix crash when setting image to something other than PNG

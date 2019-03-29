@@ -2,9 +2,6 @@ package com.redsponge.mycoolapp.project;
 
 import java.util.Random;
 
-/**
- * A fun class of randomness
- */
 public class ProjectTemplates {
 
     public static final String[] RANDOM_NAMES = {
