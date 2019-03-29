@@ -4,6 +4,9 @@ import com.redsponge.mycoolapp.login.LoginUtils;
 
 import java.io.Serializable;
 
+/**
+ * Represents a user in the database
+ */
 public class User implements Serializable {
 
     public int id;

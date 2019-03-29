@@ -2,7 +2,10 @@ package com.redsponge.mycoolapp.project;
 
 import java.util.Random;
 
-public class ProjectTemplates {
+/**
+ * A random class which holds placeholder strings for new projects
+ */
+public class ProjectPlaceholders {
 
     public static final String[] RANDOM_NAMES = {
             "New Project_0",

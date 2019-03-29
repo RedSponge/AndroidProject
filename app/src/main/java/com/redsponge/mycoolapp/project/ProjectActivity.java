@@ -30,6 +30,9 @@ import com.redsponge.mycoolapp.utils.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 
+/**
+ * An activity which displays a single project, in which the user can configure that project.
+ */
 public class ProjectActivity extends AbstractActivity {
 
     private static final int IMAGE_PICK_RESULT = 1;
@@ -52,6 +55,7 @@ public class ProjectActivity extends AbstractActivity {
 
         setupDisplay();
     }
+
 
     private void setupDisplay() {
         this.title = (TextView) findViewById(R.id.projectTitle);
@@ -88,6 +92,9 @@ public class ProjectActivity extends AbstractActivity {
         inviteUserInput.setAdapter(names);
     }
 
+    /**
+     * Leaves a project, this will be called if a user isn't an admin on the project (asks if sure first)
+     */
     private void leaveProject() {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
@@ -113,30 +120,30 @@ public class ProjectActivity extends AbstractActivity {
     public void deleteProject() {
         if(db.isUserAdmin(currentUser, project.id)) {
 
-            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if(which == DialogInterface.BUTTON_POSITIVE) {
-                        db.deleteProject(project.id);
-                        finish();
-                    }
-                }
-            };
+
 
             new AlertDialog.Builder(this)
                     .setTitle("Warning")
                     .setMessage("Deleting a project is permanent! Are you sure?")
-                    .setPositiveButton("Yes", listener)
-                    .setNegativeButton("No", listener)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(which == DialogInterface.BUTTON_POSITIVE) {
+                                db.deleteProject(project.id);
+                                finish();
+                            }
+                        }
+                    })
+                    .setNegativeButton("No", null)
                     .show();
         } else {
-            AlertDialog al = new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setTitle("Whoops!")
                     .setMessage("You do not have permission to do this!")
                     .setPositiveButton("OK", (new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            dialog.cancel();
                         }
                     }))
                     .show();
@@ -153,6 +160,8 @@ public class ProjectActivity extends AbstractActivity {
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.requestFocus();
+        input.setText(project.description);
+        input.setSelection(0, project.description.length());
 
         builder.setView(input);
 
@@ -211,6 +220,10 @@ public class ProjectActivity extends AbstractActivity {
         }
     }
 
+    /**
+     * Called once the user has chosen an image from the gallery (in this case)
+     * Decodes the image, scales it, displays it, and saves it to the database
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(data == null) return;
@@ -238,6 +251,9 @@ public class ProjectActivity extends AbstractActivity {
         }
     }
 
+    /**
+     * Called when the user has granted (or not) permission to access files
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch(requestCode) {
@@ -250,6 +266,9 @@ public class ProjectActivity extends AbstractActivity {
         }
     }
 
+    /**
+     * Checks for permission and if they're granted proceeds to require image from gallery
+     */
     public void changeImageButtonClicked(View view) {
         if(Build.VERSION.SDK_INT >= 23) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -260,6 +279,9 @@ public class ProjectActivity extends AbstractActivity {
         changeImageShowGallery();
     }
 
+    /**
+     * Opens the gallery for image choosing
+     */
     public void changeImageShowGallery() {
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/*");
@@ -273,6 +295,9 @@ public class ProjectActivity extends AbstractActivity {
         startActivityForResult(chooserIntent, IMAGE_PICK_RESULT);
     }
 
+    /**
+     * Edits the category of the project
+     */
     public void editCategory(View view) {
         final Spinner spinner = new Spinner(this);
         final ArrayAdapter<Category> options = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
@@ -311,9 +336,14 @@ public class ProjectActivity extends AbstractActivity {
                 .show();
     }
 
+    /**
+     * Changes the name of the project
+     */
     public void changeName(View view) {
         final EditText input = new EditText(this);
         input.setHint("New name");
+        input.setText(project.name);
+        input.setSelection(0, project.name.length());
 
         new AlertDialog.Builder(this)
                 .setTitle("Change name")
@@ -324,6 +354,7 @@ public class ProjectActivity extends AbstractActivity {
                         if(!input.getText().toString().isEmpty()) {
                             db.setProjectName(project.id, input.getText().toString());
                             title.setText(input.getText().toString());
+                            project.name = input.getText().toString();
                         }
                     }
                 })

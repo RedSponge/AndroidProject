@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The activity which shows all projects of the user
+ */
 public class ProjectViewActivity extends AbstractActivity {
 
     private ProjectsAdapter projectsAdapter;

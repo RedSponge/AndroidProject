@@ -13,7 +13,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="0.5" android:text="@string/project_description_placeholder" android:gravity="center"
-        android:id="@+id/projectDescription" android:textSize="18sp"/>
+        android:id="@+id/projectDescription" android:textSize="18sp"
+        android:clickable="true"
+        android:onClick="editDescription"/>
 
     <ImageView
         android:id="@+id/projectIcon"
@@ -51,27 +53,15 @@
                 android:text="Invite" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/deleteProject"
-            android:layout_centerHorizontal="true">
-            <Button
-                android:id="@+id/editDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:onClick="editDescription"
-                android:text="Edit Description" />
-
             <Button
                 android:id="@+id/editCategory"
+                android:layout_above="@+id/deleteProject"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:onClick="editCategory"
                 android:text="Change Category" />
-        </LinearLayout>
         <Button
             android:id="@+id/deleteProject"
             android:layout_width="wrap_content"

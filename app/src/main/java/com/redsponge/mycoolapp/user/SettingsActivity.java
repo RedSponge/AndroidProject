@@ -12,6 +12,9 @@ import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
 import com.redsponge.mycoolapp.utils.AlertUtils;
 
+/**
+ * The activity in which username and password can be changed.
+ */
 public class SettingsActivity extends AbstractActivity {
 
     private EditText usernameInput;
@@ -62,9 +65,6 @@ public class SettingsActivity extends AbstractActivity {
      * @param ifAssured The code to execute if the user has passed the check
      */
     private void assureUser(final Runnable ifAssured) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Enter current password:");
-
         final EditText input = new EditText(this);
 
         input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -72,8 +72,10 @@ public class SettingsActivity extends AbstractActivity {
 
         input.requestFocus();
 
-        builder.setView(input);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this)
+                .setTitle("Enter current password:").
+                setView(input).
+                setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -84,15 +86,12 @@ public class SettingsActivity extends AbstractActivity {
                     AlertUtils.showAlert(SettingsActivity.this, "Error", "Incorrect password!", null);
                 }
             }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
-        });
-
-        builder.show();
+        })
+                .show();
     }
 }

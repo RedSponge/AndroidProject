@@ -9,6 +9,9 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 import java.util.Objects;
 
+/**
+ * A base class for all activities of this program
+ */
 public abstract class AbstractActivity extends Activity {
 
     protected DatabaseHandler db;
@@ -28,8 +31,16 @@ public abstract class AbstractActivity extends Activity {
         initialize();
     }
 
+    /**
+     * The initializing method of the activity, replaces {@link Activity#onCreate(Bundle)}
+     */
     protected abstract void initialize();
 
+    /**
+     * Switches to a new activity of this program
+     * @param newActivity The new activity's class
+     * @param finish Should this activity be closed after switching
+     */
     protected void switchToActivity(Class<? extends AbstractActivity> newActivity, boolean finish) {
         Intent intent = new Intent(this, newActivity);
         intent.putExtra("currentUser", currentUser);

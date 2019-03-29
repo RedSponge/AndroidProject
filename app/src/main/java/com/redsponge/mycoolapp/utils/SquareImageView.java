@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+/**
+ * An image view which re-scales itself to be square
+ */
 public class SquareImageView extends ImageView {
     public SquareImageView(Context context) {
         super(context);

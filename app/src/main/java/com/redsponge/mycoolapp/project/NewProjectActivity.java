@@ -1,12 +1,9 @@
 package com.redsponge.mycoolapp.project;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
 
 public class NewProjectActivity extends AbstractActivity {
@@ -21,8 +18,8 @@ public class NewProjectActivity extends AbstractActivity {
         nameInput = (EditText) findViewById(R.id.projectNameInput);
         descriptionInput = (EditText) findViewById(R.id.projectDescriptionInput);
 
-        nameInput.setText(ProjectTemplates.getRandomName());
-        descriptionInput.setText(ProjectTemplates.getRandomDescription());
+        nameInput.setText(ProjectPlaceholders.getRandomName());
+        descriptionInput.setText(ProjectPlaceholders.getRandomDescription());
 
         nameInput.requestFocus();
     }
