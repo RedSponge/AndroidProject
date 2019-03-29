@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:clickable="true"
-        android:onClick="changeImage"
+        android:onClick="changeImageButtonClicked"
         android:scaleType="fitCenter"
         android:src="@drawable/project_default_pic" />
 
