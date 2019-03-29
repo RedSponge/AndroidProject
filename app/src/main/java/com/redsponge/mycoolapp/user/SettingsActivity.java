@@ -1,4 +1,4 @@
-package com.redsponge.mycoolapp.utils;
+package com.redsponge.mycoolapp.user;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.login.LoginUtils;
+import com.redsponge.mycoolapp.utils.AlertUtils;
 
 public class SettingsActivity extends Activity{
 
@@ -29,15 +30,15 @@ public class SettingsActivity extends Activity{
         usernameInput = (EditText) findViewById(R.id.usernameChangeInput);
         passwordInput = (EditText) findViewById(R.id.passwordChangeInput);
 
-        currentUser = getIntent().getIntExtra("currentUser", -1);
-        if(currentUser == -1) {
-            throw new RuntimeException("this shouldn't happen!");
-        }
+        currentUser = getIntent().getExtras().getInt("currentUser");
     }
 
     public void changeUsername(View view) {
         if(db.getUser(usernameInput.getText().toString()) != null) {
-            usernameInput.setError("Username already taken!");
+            usernameInput.setError(getString(R.string.username_taken_error));
+            return;
+        } else if(!LoginUtils.isUsernameValid(usernameInput.getText().toString())) {
+            usernameInput.setError(getString(R.string.invalid_username_error));
             return;
         }
         assureUser(new Runnable() {
@@ -50,6 +51,10 @@ public class SettingsActivity extends Activity{
     }
 
     public void changePassword(View view) {
+        if(!LoginUtils.isPasswordValid(passwordInput.getText().toString())) {
+            this.passwordInput.setError(getString(R.string.invalid_password_error));
+            return;
+        }
         assureUser(new Runnable() {
             @Override
             public void run() {

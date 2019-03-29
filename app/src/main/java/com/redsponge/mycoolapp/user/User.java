@@ -1,6 +1,4 @@
-package com.redsponge.mycoolapp.utils;
-
-import android.util.Log;
+package com.redsponge.mycoolapp.user;
 
 import com.redsponge.mycoolapp.login.LoginUtils;
 

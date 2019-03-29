@@ -2,14 +2,12 @@ package com.redsponge.mycoolapp.project;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +24,7 @@ import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.InviteViewActivity;
 import com.redsponge.mycoolapp.utils.Constants;
-import com.redsponge.mycoolapp.utils.SettingsActivity;
+import com.redsponge.mycoolapp.user.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;

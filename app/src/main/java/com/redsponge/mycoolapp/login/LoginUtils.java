@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.utils.Constants;
 
 public class LoginUtils {
 
@@ -18,6 +19,22 @@ public class LoginUtils {
             hash = hash*31 + pw.charAt(i);
         }
         return hash;
+    }
+
+    /**
+     * Checks if a password is valid, by the following rules:
+     * 1. A password must be at least {@link Constants#PASSWORD_MIN_LENGTH} characters long
+     * 2. A password must have at least 1 digit in it
+     * @param pw The password to check
+     * @return Is the password valid
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isPasswordValid(String pw) {
+        return !pw.isEmpty() && pw.length() >= Constants.PASSWORD_MIN_LENGTH && pw.matches(".*\\d.*");
+    }
+
+    public static boolean isUsernameValid(String username) {
+        return !username.isEmpty() && username.length() >= Constants.USERNAME_MIN_LENGTH;
     }
 
     public static void registerCurrentUser(Context ctx, int id) {

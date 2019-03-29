@@ -4,13 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.utils.Constants;
-import com.redsponge.mycoolapp.utils.User;
+import com.redsponge.mycoolapp.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +83,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return The user
      */
     public User getUser(String name) {
-        final Cursor cursor = getReadableDatabase().rawQuery("SELECT user_id, user_name, user_password FROM users WHERE lower(user_name) = \"" + name.toLowerCase() + "\"", null);
+        SQLiteDatabase db = getReadableDatabase();
+
+        final Cursor cursor = db.rawQuery("SELECT user_id, user_name, user_password FROM users WHERE lower(user_name) = ?", new String[] {name.toLowerCase()});
         final User user;
 
         if(cursor.moveToFirst()) {
@@ -92,7 +93,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             user = null;
         }
+
         cursor.close();
+        db.close();
 
         return user;
     }
@@ -205,19 +208,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "ON  project_groups.proj_id = projects.proj_id\n" +
                 "AND project_groups.user_id = users.user_id\n" +
                 "AND project_groups.admin = 1 AND projects.proj_id = " + project + " " +
-                "AND users.user_id = \"" + user + "\"", null);
-        boolean isAdmin;
+                "AND users.user_id = " + user, null);
 
-        if(cursor.getCount() > 1) {
-            throw new RuntimeException("Shouldn't be more than one! " + cursor.getCount());
-        } else {
-            isAdmin = cursor.getCount() == 1;
-        }
+        final boolean isAdmin = cursor.getCount() == 1;
+
         cursor.close();
         db.close();
         return isAdmin;
     }
 
+    /**
+     * Sets a project's description to something new
+     * @param id
+     * @param description
+     */
     public void updateProjectDescription(int id, String description) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE projects SET proj_description = ? WHERE proj_id = ?", new Object[] {description, id});
@@ -487,7 +491,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Category getCategory(int user, String category) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user + " AND lower(category_name) = \"" + category.toLowerCase() + "\"", null);
+        Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user + " AND lower(category_name) = ?", new String[] {category.toLowerCase()});
         Category cat = null;
 
         if(c.moveToFirst()) {

@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".project.ProjectActivity"/>
-        <activity android:name=".utils.SettingsActivity"/>
+        <activity android:name=".user.SettingsActivity"/>
         <activity android:name=".project.NewProjectActivity"/>
         <activity android:name=".project.ProjectViewActivity"/>
         <activity android:name=".login.RegisterActivity"/>

@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,12 +22,12 @@ import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.utils.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
-import com.redsponge.mycoolapp.utils.User;
 
 public class ProjectActivity extends Activity {
 

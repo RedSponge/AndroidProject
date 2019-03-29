@@ -3,15 +3,14 @@ package com.redsponge.mycoolapp.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.project.ProjectViewActivity;
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.utils.User;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.user.User;
 
 public class LoginActivity extends Activity {
 

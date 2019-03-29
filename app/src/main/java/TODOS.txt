@@ -1,4 +1,7 @@
- - Prevent SQL Injection by using PreparedStatements
+ << - Prevent SQL Injection by using PreparedStatements >>
+
+ Login:
+    Add regex to passwords: at least 8 characters, 1 digit
 
  General:
  - Ask people for polish ideas
