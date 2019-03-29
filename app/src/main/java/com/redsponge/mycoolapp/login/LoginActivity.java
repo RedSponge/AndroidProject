@@ -3,6 +3,7 @@ package com.redsponge.mycoolapp.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -11,25 +12,21 @@ import com.redsponge.mycoolapp.project.ProjectViewActivity;
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.user.User;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AbstractActivity {
 
     private EditText username;
     private EditText password;
     private CheckBox keepLoggedIn;
-    private DatabaseHandler dbHandler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        int currentUser = LoginUtils.getCurrentUser(this);
+    protected void initialize() {
+        currentUser = LoginUtils.getCurrentUser(this);
 
         if(currentUser != -1) {
-            Intent intent = new Intent(this, ProjectViewActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            finish();
-            startActivity(intent);
+            switchToActivity(ProjectViewActivity.class, true);
+            return;
         }
 
         setContentView(R.layout.activity_login);
@@ -37,9 +34,12 @@ public class LoginActivity extends Activity {
         username = (EditText) findViewById(R.id.usernameInput);
         password = (EditText) findViewById(R.id.passwordInput);
         keepLoggedIn = (CheckBox) findViewById(R.id.keepLoggedIn);
-        dbHandler = new DatabaseHandler(this);
     }
 
+    /**
+     * Tries to login into an account. if successful transfers the user to the {@link ProjectViewActivity} activity
+     * @param view
+     */
     public void tryLogin(View view) {
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
@@ -49,26 +49,25 @@ public class LoginActivity extends Activity {
         }
 
         int hashedPw = LoginUtils.hashPw(password);
-        User user = dbHandler.getUser(username);
+        User user = db.getUser(username);
 
         if(user != null && user.password == hashedPw) {
-            Intent intent = new Intent(this, ProjectViewActivity.class);
-            intent.putExtra("currentUser", user.id);
-
             if(keepLoggedIn.isChecked()) {
                 LoginUtils.registerCurrentUser(this,user.id);
             }
-
-            finish();
-            startActivity(intent);
+            currentUser = user.id;
+            switchToActivity(ProjectViewActivity.class, true);
         } else {
             this.username.setError("Unknown username or password!");
             this.password.setError("Unknown username or password!");
         }
     }
 
+    /**
+     * Transfers the user to the {@link RegisterActivity}
+     * @param view
+     */
     public void enterRegister(View view) {
-        Intent i = new Intent(this, RegisterActivity.class);
-        startActivity(i);
+        switchToActivity(RegisterActivity.class, false);
     }
 }

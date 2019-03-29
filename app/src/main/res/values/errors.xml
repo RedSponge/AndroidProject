@@ -4,4 +4,5 @@
     <string name="invalid_password_error">A password must be at least 8 characters long and have 1 digit</string>
     <string name="invalid_username_error">A username must be at least 3 characters long</string>
     <string name="password_empty_error">Password cannot be empty!</string>
+    <string name="category_name_taken_error">Name taken!</string>
 </resources>

@@ -1,13 +1,12 @@
 package com.redsponge.mycoolapp.project;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,55 +17,59 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.login.LoginActivity;
 import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.InviteViewActivity;
-import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.user.SettingsActivity;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
+import com.redsponge.mycoolapp.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class ProjectViewActivity extends Activity {
+public class ProjectViewActivity extends AbstractActivity {
 
-    private ProjectsAdapter listAdapter;
-    private DatabaseHandler db;
-    private int currentUser;
+    private ProjectsAdapter projectsAdapter;
 
     private Spinner categorySelector;
-    private ArrayAdapter<Category> spinnerAdapter;
+    private ArrayAdapter<Category> categoryAdapter;
+
+    private ListView projectViewList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initialize() {
         setContentView(R.layout.activity_project_view);
 
-        currentUser = getIntent().getExtras().getInt("currentUser");
 
-        db = new DatabaseHandler(this);
-        listAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser, db);
-
+        // If user has been deleted
         if(db.getUser(currentUser) == null) {
+            Log.i(getClass().getName(), "Current User Doesn't Exist! " + currentUser);
             logout(null);
+            return;
         }
 
-        ListView listView = (ListView) findViewById(R.id.projectViewList);
-        listView.setAdapter(listAdapter);
+        projectsAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser, db);
 
-        spinnerAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
+        projectViewList = (ListView) findViewById(R.id.projectViewList);
+        projectViewList.setAdapter(projectsAdapter);
+
+        categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
+
         categorySelector = (Spinner) findViewById(R.id.categorySelector);
-        categorySelector.setAdapter(spinnerAdapter);
+        categorySelector.setAdapter(categoryAdapter);
 
         queryCategories();
         queryProjects();
         updateInvitesButton();
 
+        // Add category change listener
         categorySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                findViewById(R.id.deleteCategoryButton).setEnabled(spinnerAdapter.getItem(position).id != Constants.CATEGORY_ALL_ID);
+                findViewById(R.id.deleteCategoryButton)
+                        .setEnabled(Objects.requireNonNull(categoryAdapter.getItem(position)).id != Constants.CATEGORY_ALL_ID);
                 queryProjects();
             }
 
@@ -77,31 +80,34 @@ public class ProjectViewActivity extends Activity {
         });
     }
 
+    /**
+     * Updates the {@link ProjectViewActivity#categoryAdapter} based on the categories from the database
+     */
     private void queryCategories() {
-        spinnerAdapter.clear();
-        spinnerAdapter.add(new Category(Constants.CATEGORY_ALL_ID, "All", currentUser, db));
+        categoryAdapter.clear();
+
+        categoryAdapter.add(new Category(Constants.CATEGORY_ALL_ID, "All", currentUser, db));
+
         for(Category c : db.getCategories(currentUser)) {
-            spinnerAdapter.add(c);
+            categoryAdapter.add(c);
         }
     }
 
     /**
-     * Updates the {@link ProjectViewActivity#listAdapter} based on the projects from the database
+     * Updates the {@link ProjectViewActivity#projectsAdapter} based on the projects from the database
      */
     private void queryProjects() {
-        listAdapter.clear();
-        Category c = (Category) categorySelector.getSelectedItem();
+        projectsAdapter.clear();
+        final Category c = (Category) categorySelector.getSelectedItem();
 
-        List<Project> projects;
+        final List<Project> projects;
         if(c == null) {
             projects = db.getAllProjects(currentUser);
         } else {
             projects = db.getProjectsForCategory(currentUser, c.id);
         }
 
-        for (Project project : projects) {
-            listAdapter.add(project);
-        }
+        projectsAdapter.addAll(projects);
 
         String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).name);
         ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
@@ -127,18 +133,14 @@ public class ProjectViewActivity extends Activity {
      * Enters the settings screen ({@link SettingsActivity})
      */
     public void enterSettings(View view) {
-        Intent change = new Intent(this, SettingsActivity.class);
-        change.putExtra("currentUser", currentUser);
-        this.startActivity(change);
+        switchToActivity(SettingsActivity.class, false);
     }
 
     /**
      * Enters the new project screen ({@link NewProjectActivity})
      */
     public void newProject(View view) {
-        Intent intent = new Intent(this, NewProjectActivity.class);
-        intent.putExtra("currentUser", currentUser);
-        startActivity(intent);
+        switchToActivity(NewProjectActivity.class, false);
     }
 
     /**
@@ -146,18 +148,14 @@ public class ProjectViewActivity extends Activity {
      */
     public void logout(View view) {
         LoginUtils.clearCurrentUser(this);
-        Intent backToLogin = new Intent(this, LoginActivity.class);
-        finish();
-        startActivity(backToLogin);
+        switchToActivity(LoginActivity.class, true);
     }
 
     /**
      * Called when the view invites button is pressed
      */
     public void viewInvites(View view) {
-        Intent i = new Intent(this, InviteViewActivity.class);
-        i.putExtra("currentUser", currentUser);
-        startActivity(i);
+        switchToActivity(InviteViewActivity.class, false);
     }
 
     public void addCategory(final View view) {
@@ -173,50 +171,42 @@ public class ProjectViewActivity extends Activity {
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO: Check if name is avaliable, then add or show error
                         String name = input.getText().toString();
-                        if(true) {
-                            db.addCategory(new Category(name, currentUser, db));
-                            queryCategories();
-                        } else {
-                            input.setError("Name taken or empty!");
-                        }
+                        db.addCategory(new Category(name, currentUser, db));
+                        queryCategories();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                .setNegativeButton("Cancel", null)
+                .show();
 
         final Button okButton = b.getButton(DialogInterface.BUTTON_POSITIVE);
 
+        // Disable ok button when category name which already exists is entered
         input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if(db.getCategory(currentUser, s.toString()) != null) {
-                    input.setError("Name taken!");
+                    input.setError(getString(R.string.category_name_taken_error));
                     okButton.setEnabled(false);
                 } else {
                     okButton.setEnabled(true);
                 }
             }
+            // region Ignored
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            // endregion
         });
 
 
     }
 
+    /**
+     * Deletes a category if the user confirms it
+     */
     public void deleteCategory(View view) {
         new AlertDialog.Builder(this)
                 .setTitle("Warning")

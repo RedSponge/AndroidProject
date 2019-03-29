@@ -7,6 +7,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="1" android:text="@string/project_title_placeholder" android:gravity="center"
+        android:onClick="changeName"
+        android:clickable="true"
         android:textSize="36sp" android:id="@+id/projectTitle"/>
     <TextView
         android:layout_width="match_parent"

@@ -17,6 +17,7 @@
     <string name="placeholder_invite_from">From: %s</string>
     <string name="unmatching_passwords_error">Passwords don\'t match!</string>
     <string name="username_taken_error">Username taken!</string>
+    <string name="project_name_empty_error">Name cannot be empty!</string>
 
 
 </resources>

@@ -1,36 +1,28 @@
 package com.redsponge.mycoolapp.user;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.login.LoginUtils;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
 import com.redsponge.mycoolapp.utils.AlertUtils;
 
-public class SettingsActivity extends Activity{
+public class SettingsActivity extends AbstractActivity {
 
-    private DatabaseHandler db;
     private EditText usernameInput;
     private EditText passwordInput;
-    private int currentUser;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initialize() {
         setContentView(R.layout.activity_settings);
-        db = new DatabaseHandler(this);
 
         usernameInput = (EditText) findViewById(R.id.usernameChangeInput);
         passwordInput = (EditText) findViewById(R.id.passwordChangeInput);
-
-        currentUser = getIntent().getExtras().getInt("currentUser");
     }
 
     public void changeUsername(View view) {

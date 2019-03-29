@@ -75,6 +75,7 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
     private void enterProject(Project project) {
 
         Intent intent = new Intent(getContext(), ProjectActivity.class);
+
         intent.putExtra("project", project);
         intent.putExtra("currentUser", currentUser);
 

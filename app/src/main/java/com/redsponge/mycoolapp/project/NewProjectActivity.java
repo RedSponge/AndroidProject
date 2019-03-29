@@ -7,30 +7,19 @@ import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
 
-public class NewProjectActivity extends Activity {
+public class NewProjectActivity extends AbstractActivity {
 
     private EditText nameInput;
     private EditText descriptionInput;
 
-    private DatabaseHandler dbHandler;
-
-    private int currentUser;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initialize() {
         setContentView(R.layout.activity_new_project);
 
         nameInput = (EditText) findViewById(R.id.projectNameInput);
         descriptionInput = (EditText) findViewById(R.id.projectDescriptionInput);
-
-        dbHandler = new DatabaseHandler(this);
-
-        currentUser = getIntent().getExtras().getInt("currentUser", -1);
-        if(currentUser == -1) {
-            throw new RuntimeException("Current User Wasn't Passed!");
-        }
 
         nameInput.setText(ProjectTemplates.getRandomName());
         descriptionInput.setText(ProjectTemplates.getRandomDescription());
@@ -42,16 +31,16 @@ public class NewProjectActivity extends Activity {
         String name = nameInput.getText().toString();
         String description = descriptionInput.getText().toString();
 
-        if(name.trim().equals("")) {
+        if(name.isEmpty()) {
+            nameInput.setError(getString(R.string.project_name_empty_error));
             return;
         }
 
-        Project newProj = new Project(name, description);
+        Project project = new Project(name, description);
 
-        int id = dbHandler.addProject(newProj);
+        int id = db.addProject(project);
+        db.linkProjectToUser(id, currentUser, true);
 
-        dbHandler.linkProjectToUser(id, currentUser, true);
-
-        this.finish(); // Closes this activity
+        finish();
     }
 }

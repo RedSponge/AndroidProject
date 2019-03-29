@@ -1,6 +1,5 @@
  General:
  - Ask people for polish ideas
- - See if can beautify buttons
  - Refactor messy code, especially the Database Handler
 
 

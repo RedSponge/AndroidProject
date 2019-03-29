@@ -19,7 +19,7 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
 
     public InvitesAdapter(Context context) {
         super(context, 0);
-        db = new DatabaseHandler(context);
+        db = DatabaseHandler.getInstance();
     }
 
     @Override

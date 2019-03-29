@@ -1,6 +1,5 @@
 package com.redsponge.mycoolapp.project;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
@@ -21,15 +19,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
-import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
+import com.redsponge.mycoolapp.user.User;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
 import com.redsponge.mycoolapp.utils.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 
-public class ProjectActivity extends Activity {
+public class ProjectActivity extends AbstractActivity {
 
     private static final int IMAGE_PICK_RESULT = 1;
 
@@ -39,20 +37,14 @@ public class ProjectActivity extends Activity {
 
     private AutoCompleteTextView inviteUserInput;
 
-    private DatabaseHandler db;
-    private int currentUser;
-
     private ImageView imgView;
     private Button deleteButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initialize() {
         setContentView(R.layout.activity_project);
         this.project = (Project) getIntent().getExtras().get("project");
-        this.currentUser = getIntent().getExtras().getInt("currentUser");
 
-        db = new DatabaseHandler(this);
         setupDisplay();
     }
 
@@ -283,6 +275,26 @@ public class ProjectActivity extends Activity {
                         dialog.cancel();
                     }
                 })
+                .show();
+    }
+
+    public void changeName(View view) {
+        final EditText input = new EditText(this);
+        input.setHint("New name");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Change name")
+                .setView(input)
+                .setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(!input.getText().toString().isEmpty()) {
+                            db.setProjectName(project.id, input.getText().toString());
+                            title.setText(input.getText().toString());
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 }

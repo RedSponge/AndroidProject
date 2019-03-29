@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
@@ -19,7 +20,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "projects.db";
     private static final int DATABASE_VERSION = 1;
 
-    public DatabaseHandler(Context context) {
+    private static DatabaseHandler INSTANCE;
+
+    public static void initializeDatabase(Context ctx) {
+        INSTANCE = new DatabaseHandler(ctx);
+    }
+
+    public static DatabaseHandler getInstance() {
+        return INSTANCE;
+    }
+
+
+
+    private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -554,5 +567,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
         return inside;
+    }
+
+    public void setProjectName(int project, String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE projects SET proj_name = ? WHERE proj_id = ?", new Object[] {name, project});
+        db.close();
     }
 }
