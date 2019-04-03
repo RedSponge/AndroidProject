@@ -53,16 +53,17 @@ public class ProjectActivity extends AbstractActivity {
         setContentView(R.layout.activity_project);
         this.project = (Project) getIntent().getExtras().get("project");
 
-        setupDisplay();
-    }
-
-
-    private void setupDisplay() {
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
         this.inviteUserInput = (AutoCompleteTextView) findViewById(R.id.inviteNameInput);
         this.imgView = (ImageView) findViewById(R.id.projectIcon);
         this.deleteButton = (Button) findViewById(R.id.deleteProject);
+
+        setupDisplay();
+    }
+
+
+    private void setupDisplay() {
         this.title.setText(project.name);
         this.description.setText(project.description);
 
@@ -85,7 +86,7 @@ public class ProjectActivity extends AbstractActivity {
                     leaveProject();
                 }
             });
-            deleteButton.setText("Leave Project");
+            deleteButton.setText(R.string.leave_project_text);
         }
 
         ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.id));
@@ -96,22 +97,14 @@ public class ProjectActivity extends AbstractActivity {
      * Leaves a project, this will be called if a user isn't an admin on the project (asks if sure first)
      */
     private void leaveProject() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+        AlertUtils.showConfirmPrompt(this, "Warning", "You cannot rejoin the project unless you're re-invited! Are you sure?",
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(which == DialogInterface.BUTTON_POSITIVE) {
-                    db.unlinkProjectFromUser(project.id, currentUser);
-                    finish();
-                }
+                db.unlinkProjectFromUser(project.id, currentUser);
+                finish();
             }
-        };
-
-        new AlertDialog.Builder(this)
-                .setTitle("Warning")
-                .setMessage("You cannot rejoin the project unless you're re-invited! Are you sure?")
-                .setPositiveButton("Yes", listener)
-                .setNegativeButton("No", listener)
-                .show();
+        });
     }
 
     /**
@@ -119,13 +112,7 @@ public class ProjectActivity extends AbstractActivity {
      */
     public void deleteProject() {
         if(db.isUserAdmin(currentUser, project.id)) {
-
-
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("Deleting a project is permanent! Are you sure?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            AlertUtils.showConfirmPrompt(this, "Warning", "Deleting a project is permanent! Are you sure?", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(which == DialogInterface.BUTTON_POSITIVE) {
@@ -133,20 +120,9 @@ public class ProjectActivity extends AbstractActivity {
                                 finish();
                             }
                         }
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
+                    });
         } else {
-            new AlertDialog.Builder(this)
-                    .setTitle("Whoops!")
-                    .setMessage("You do not have permission to do this!")
-                    .setPositiveButton("OK", (new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }))
-                    .show();
+            AlertUtils.showAlert(this, "Whoops", "You do not have permission to do this!", null);
         }
     }
 

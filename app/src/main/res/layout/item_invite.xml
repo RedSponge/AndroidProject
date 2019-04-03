@@ -21,19 +21,19 @@
         android:layout_height="match_parent" android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/projectName" android:text="@string/placeholder_name" android:textStyle="bold"/>
+            android:layout_height="wrap_content" android:id="@+id/projectName" android:editText="@string/placeholder_name" android:textStyle="bold"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/projectFrom" android:text="@string/placeholder_invite_from" />
+            android:layout_height="wrap_content" android:id="@+id/projectFrom" android:editText="@string/placeholder_invite_from" />
     </LinearLayout>
 
     <Button
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content" android:id="@+id/declineButton" android:text="Decline" android:textSize="14sp"/>
+        android:layout_height="wrap_content" android:id="@+id/declineButton" android:editText="Decline" android:textSize="14sp"/>
     <Button
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content" android:id="@+id/acceptButton" android:text="Accept" android:textSize="14sp"/>
+        android:layout_height="wrap_content" android:id="@+id/acceptButton" android:editText="Accept" android:textSize="14sp"/>
 
 </LinearLayout>

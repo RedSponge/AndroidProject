@@ -1,1 +1,1 @@
-Fix crash when setting image to something other than PNG
+IM DONE

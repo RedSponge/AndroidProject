@@ -5,7 +5,7 @@
 
     <!-- Title -->
     <TextView
-       style="@style/Title" android:text="Welcome!"
+       style="@style/Title" android:editText="Welcome!"
         android:layout_weight="1"/>
 
     <!-- Login Interface -->
@@ -18,7 +18,7 @@
 
         <EditText
             android:hint="Username"
-            android:inputType="text"
+            android:inputType="editText"
             android:maxLength="16"
             style="@style/LoginInput"
 
@@ -32,14 +32,14 @@
 
         <CheckBox
             android:id="@+id/keepLoggedIn"
-            android:text="Keep me logged in"
+            android:editText="Keep me logged in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
             android:buttonTint="@color/colorPrimary"
             />
         <Button
-            android:text="Login"
+            android:editText="Login"
             style="@style/LoginInput" android:layout_marginLeft="30dp" android:layout_marginRight="30dp"
             android:onClick="tryLogin"/>
     </LinearLayout>
@@ -51,10 +51,10 @@
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="Or, if you don't have an account..." android:gravity="center"/>
+            android:layout_height="wrap_content" android:editText="Or, if you don't have an account..." android:gravity="center"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="Register" android:textSize="20sp"
+            android:layout_height="wrap_content" android:editText="Register" android:textSize="20sp"
             android:clickable="true"
             android:gravity="center" android:textColor="@color/colorPrimary" android:onClick="enterRegister"/>
     </LinearLayout>
