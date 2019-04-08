@@ -16,20 +16,20 @@
 
         <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" android:editText="@string/placeholder_welcome" android:gravity="center"
+        android:layout_height="match_parent" android:text="@string/placeholder_welcome" android:gravity="center"
         android:textSize="16sp" android:textStyle="bold"
             android:id="@+id/welcome_message"/>
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" android:editText="Settings"
+            android:layout_height="match_parent" android:text="Settings"
             android:id="@+id/settingsButton"
             android:textSize="16sp"
             android:layout_alignParentEnd="true" android:layout_marginEnd="0dp" android:onClick="enterSettings"/>
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" android:editText="Log Out"
+            android:layout_height="match_parent" android:text="Log Out"
             android:textSize="16sp" android:layout_toLeftOf="@id/settingsButton"
             android:onClick="logout"/>
     </RelativeLayout>
@@ -40,13 +40,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"  android:editText="Your Projects"
+            android:layout_height="wrap_content"  android:text="Your Projects"
             android:id="@+id/projectsTitle"
             style="@style/ProjectsViewTitle"/>
         <TextView
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:editText="Category"
+            android:layout_height="wrap_content" android:text="Category"
             android:layout_alignStart="@+id/categorySelector"
             android:id="@+id/categoryTitle"
             android:gravity="center_horizontal"/>
@@ -65,14 +65,14 @@
             android:layout_below="@+id/categorySelector">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:editText="Add Category"
+                android:layout_height="match_parent" android:text="Add Category"
                 android:onClick="addCategory"
                 android:textSize="16dp"
                 />
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:editText="Delete Category"
+                android:layout_height="match_parent" android:text="Delete Category"
                 android:onClick="deleteCategory"
                 android:id="@+id/deleteCategoryButton"
                 android:textSize="16dp"
@@ -95,13 +95,13 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
-            android:editText="New Project!" android:onClick="newProject"/>
+            android:text="New Project!" android:onClick="newProject"/>
         <Button
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:id="@+id/viewInvitesButton"
-            android:editText="@string/view_invites"
+            android:text="@string/view_invites"
             android:onClick="viewInvites"/>
     </TableRow>
 

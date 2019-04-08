@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    public int id;
-    public final String name;
-    public final int password;
+    private int id;
+    private String name;
+    private int password;
 
     public User(int id, String name, int password) {
         this.id = id;
@@ -23,6 +23,30 @@ public class User implements Serializable {
         this.id = id;
         this.name = name;
         this.password = LoginUtils.hashPw(password);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPassword() {
+        return password;
+    }
+
+    public void setPassword(int password) {
+        this.password = password;
     }
 
     public User(String name, String password) {

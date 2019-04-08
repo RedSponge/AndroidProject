@@ -5,10 +5,10 @@ package com.redsponge.mycoolapp.project.invite;
  */
 public class Invite {
 
-    public final int idFrom;
-    public final int idTo;
-    public final int projectId;
-    public final int shouldBeAdmin;
+    private int idFrom;
+    private int idTo;
+    private int projectId;
+    private int shouldBeAdmin;
 
     public Invite(int idFrom, int idTo, int projectId, boolean shouldBeAdmin) {
         this(idFrom, idTo, projectId, shouldBeAdmin ? 1 : 0);
@@ -19,5 +19,21 @@ public class Invite {
         this.idTo = idTo;
         this.projectId = projectId;
         this.shouldBeAdmin = shouldBeAdmin;
+    }
+
+    public int getIdFrom() {
+        return idFrom;
+    }
+
+    public int getIdTo() {
+        return idTo;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public int getShouldBeAdmin() {
+        return shouldBeAdmin;
     }
 }

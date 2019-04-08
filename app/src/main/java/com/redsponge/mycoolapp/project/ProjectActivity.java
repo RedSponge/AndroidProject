@@ -11,12 +11,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,9 +24,10 @@ import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
-import com.redsponge.mycoolapp.utils.AlertUtils;
+import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
+import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
 
 /**
  * An activity which displays a single project, in which the user can configure that project.
@@ -64,15 +63,15 @@ public class ProjectActivity extends AbstractActivity {
 
 
     private void setupDisplay() {
-        this.title.setText(project.name);
-        this.description.setText(project.description);
+        this.title.setText(project.getName());
+        this.description.setText(project.getDescription());
 
-        String img = db.getIcon(project.id);
+        String img = db.getIcon(project.getId());
         if(img != null) {
             this.imgView.setImageBitmap(ImageUtils.decode(img));
         }
 
-        if(db.isUserAdmin(currentUser, project.id)) {
+        if(db.isUserAdmin(currentUser, project.getId())) {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +88,7 @@ public class ProjectActivity extends AbstractActivity {
             deleteButton.setText(R.string.leave_project_text);
         }
 
-        ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.id));
+        ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.getId()));
         inviteUserInput.setAdapter(names);
     }
 
@@ -101,7 +100,7 @@ public class ProjectActivity extends AbstractActivity {
                 new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                db.unlinkProjectFromUser(project.id, currentUser);
+                db.unlinkProjectFromUser(project.getId(), currentUser);
                 finish();
             }
         });
@@ -111,12 +110,12 @@ public class ProjectActivity extends AbstractActivity {
      * Deletes a project (asks if sure first)
      */
     public void deleteProject() {
-        if(db.isUserAdmin(currentUser, project.id)) {
+        if(db.isUserAdmin(currentUser, project.getId())) {
             AlertUtils.showConfirmPrompt(this, "Warning", "Deleting a project is permanent! Are you sure?", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(which == DialogInterface.BUTTON_POSITIVE) {
-                                db.deleteProject(project.id);
+                                db.deleteProject(project.getId());
                                 finish();
                             }
                         }
@@ -124,41 +123,6 @@ public class ProjectActivity extends AbstractActivity {
         } else {
             AlertUtils.showAlert(this, "Whoops", "You do not have permission to do this!", null);
         }
-    }
-
-    /**
-     * Shows a popup to edit the description of a project
-     */
-    public void editDescription(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("New Description");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        input.requestFocus();
-        input.setText(project.description);
-        input.setSelection(0, project.description.length());
-
-        builder.setView(input);
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String desc = input.getText().toString();
-                db.updateProjectDescription(project.id, desc);
-                project.description = desc;
-                setupDisplay();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
     }
 
     /**
@@ -174,15 +138,15 @@ public class ProjectActivity extends AbstractActivity {
         boolean isPartOfProject = false;
 
         if (query != null) {
-            isSelf = query.id == currentUser;
-            isInvited = db.isInvited(query.id, project.id);
-            isPartOfProject = db.isPartOfProject(query.id, project.id);
+            isSelf = query.getId() == currentUser;
+            isInvited = db.isInvited(query.getId(), project.getId());
+            isPartOfProject = db.isPartOfProject(query.getId(), project.getId());
         }
 
         if(userExists && !isSelf && !isInvited && !isPartOfProject) {
-            Invite invite = new Invite(currentUser, query.id, project.id, false);
+            Invite invite = new Invite(currentUser, query.getId(), project.getId(), false);
             db.addInvite(invite);
-            AlertUtils.showAlert(this, "Success", query.name + " successfully invited!", null);
+            AlertUtils.showAlert(this, "Success", query.getName() + " successfully invited!", null);
         } else {
             if(!userExists) {
                 inviteUserInput.setError("Couldn't find user!");
@@ -193,37 +157,6 @@ public class ProjectActivity extends AbstractActivity {
             } else /*if (isPartOfProject)*/ {
                 inviteUserInput.setError("This person is already a part of this project!");
             }
-        }
-    }
-
-    /**
-     * Called once the user has chosen an image from the gallery (in this case)
-     * Decodes the image, scales it, displays it, and saves it to the database
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(data == null) return;
-        if(requestCode == IMAGE_PICK_RESULT) {
-            Uri selectedImage = data.getData();
-
-            String[] filePathCol = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathCol, null, null, null);
-
-            c.moveToFirst();
-            int colIndex = c.getColumnIndex(filePathCol[0]);
-
-            String imgDecodableString = c.getString(colIndex);
-            c.close();
-
-
-            Bitmap bmp = BitmapFactory.decodeFile(imgDecodableString);
-            Bitmap scaled = ImageUtils.scaleDown(bmp);
-
-            bmp.recycle();
-
-            db.setProjectIcon(project.id, ImageUtils.encode(scaled));
-            imgView.setImageBitmap(scaled);
-
         }
     }
 
@@ -272,19 +205,51 @@ public class ProjectActivity extends AbstractActivity {
     }
 
     /**
+     * Called once the user has chosen an image from the gallery (in this case)
+     * Decodes the image, scales it, displays it, and saves it to the database
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null) return;
+        if(requestCode == IMAGE_PICK_RESULT) {
+            Uri selectedImage = data.getData();
+
+            String[] filePathCol = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathCol, null, null, null);
+
+            c.moveToFirst();
+            int colIndex = c.getColumnIndex(filePathCol[0]);
+
+            String imgDecodableString = c.getString(colIndex);
+            c.close();
+
+
+            Bitmap bmp = BitmapFactory.decodeFile(imgDecodableString);
+            Bitmap scaled = ImageUtils.scaleDown(bmp);
+
+            bmp.recycle();
+
+            db.setProjectIcon(project.getId(), ImageUtils.encode(scaled));
+            imgView.setImageBitmap(scaled);
+
+        }
+    }
+
+    /**
      * Edits the category of the project
+     * Shows an alert with a category selection spinner
      */
     public void editCategory(View view) {
         final Spinner spinner = new Spinner(this);
         final ArrayAdapter<Category> options = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(options);
 
-        options.add(new Category(Constants.CATEGORY_ALL_ID, "None", currentUser, db));
+        options.add(new Category(Constants.CATEGORY_ALL_ID, "None", currentUser));
         options.addAll(db.getCategories(currentUser));
 
         for(int i = 1; i < options.getCount(); i++) { // Skip category None
             Category c = options.getItem(i);
-            if(db.isProjectInCategory(project.id, c.id)) {
+            if(db.isProjectInCategory(project.getId(), c.getId())) {
                 spinner.setSelection(i);
             }
         }
@@ -296,10 +261,10 @@ public class ProjectActivity extends AbstractActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Category selected = (Category) spinner.getSelectedItem();
-                        if(selected.id == Constants.CATEGORY_ALL_ID) {
-                            db.unlinkProjectFromUserCategories(project.id, currentUser);
+                        if(selected.getId() == Constants.CATEGORY_ALL_ID) {
+                            db.unlinkProjectFromUserCategories(project.getId(), currentUser);
                         } else {
-                            db.linkProjectToCategory(((Category) spinner.getSelectedItem()).id, project.id);
+                            db.linkProjectToCategory(((Category) spinner.getSelectedItem()).getId(), project.getId());
                         }
                     }
                 })
@@ -313,28 +278,30 @@ public class ProjectActivity extends AbstractActivity {
     }
 
     /**
+     * Shows a popup to edit the description of a project
+     */
+    public void editDescription(View view) {
+        AlertUtils.showTextPrompt(this, "New Description", new OnTextAcceptListener() {
+            @Override
+            public void onTextEntered(DialogInterface dialog, String input) {
+                db.updateProjectDescription(project.getId(), input);
+                project.setDescription(input);
+                setupDisplay();
+            }
+        }, null, project.getDescription());
+    }
+
+    /**
      * Changes the name of the project
      */
     public void changeName(View view) {
-        final EditText input = new EditText(this);
-        input.setHint("New name");
-        input.setText(project.name);
-        input.setSelection(0, project.name.length());
-
-        new AlertDialog.Builder(this)
-                .setTitle("Change name")
-                .setView(input)
-                .setPositiveButton("Set", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(!input.getText().toString().isEmpty()) {
-                            db.setProjectName(project.id, input.getText().toString());
-                            title.setText(input.getText().toString());
-                            project.name = input.getText().toString();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        AlertUtils.showTextPrompt(this, "Change name", new OnTextAcceptListener() {
+            @Override
+            public void onTextEntered(DialogInterface dialog, String input) {
+                db.setProjectName(project.getId(), input);
+                title.setText(input);
+                project.setName(input);
+            }
+        }, null, project.getName());
     }
 }

@@ -1,16 +1,14 @@
 package com.redsponge.mycoolapp.user;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
-import com.redsponge.mycoolapp.utils.AlertUtils;
+import com.redsponge.mycoolapp.utils.alert.AlertUtils;
+import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
 
 /**
  * The activity in which username and password can be changed.
@@ -28,6 +26,10 @@ public class SettingsActivity extends AbstractActivity {
         passwordInput = (EditText) findViewById(R.id.passwordChangeInput);
     }
 
+    /**
+     * Run when the change username button is clicked, assures the username is valid and then changes it after
+     * validation of the user
+     */
     public void changeUsername(View view) {
         if(db.getUser(usernameInput.getText().toString()) != null) {
             usernameInput.setError(getString(R.string.username_taken_error));
@@ -45,6 +47,10 @@ public class SettingsActivity extends AbstractActivity {
         });
     }
 
+    /**
+     * Run when the change password button is clicked, assures the password is valid and then changes it after
+     * validation of the user
+     */
     public void changePassword(View view) {
         if(!LoginUtils.isPasswordValid(passwordInput.getText().toString())) {
             this.passwordInput.setError(getString(R.string.invalid_password_error));
@@ -65,33 +71,15 @@ public class SettingsActivity extends AbstractActivity {
      * @param ifAssured The code to execute if the user has passed the check
      */
     private void assureUser(final Runnable ifAssured) {
-        final EditText input = new EditText(this);
-
-        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
-
-        input.requestFocus();
-
-        new AlertDialog.Builder(this)
-                .setTitle("Enter current password:").
-                setView(input).
-                setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        AlertUtils.showTextPrompt(this, "Enter current password: ", new OnTextAcceptListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                String pw = input.getText().toString();
-                if(db.getUser(currentUser).password == LoginUtils.hashPw(pw)) {
+            public void onTextEntered(DialogInterface dialog, String input) {
+                if(db.getUser(currentUser).getPassword() == LoginUtils.hashPw(input)) {
                     ifAssured.run();
                 } else {
                     AlertUtils.showAlert(SettingsActivity.this, "Error", "Incorrect password!", null);
                 }
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        })
-                .show();
+        }, null, null);;
     }
 }

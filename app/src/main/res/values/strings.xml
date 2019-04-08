@@ -19,6 +19,7 @@
     <string name="username_taken_error">Username taken!</string>
     <string name="project_name_empty_error">Name cannot be empty!</string>
     <string name="leave_project_text">Leave Project</string>
+    <string name="category_name_placeholder">Category Name (0)</string>
 
 
 </resources>

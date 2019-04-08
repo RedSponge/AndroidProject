@@ -21,14 +21,14 @@
         android:layout_height="match_parent" android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/projectName" android:editText="@string/placeholder_name" android:textStyle="bold"/>
+            android:layout_height="wrap_content" android:id="@+id/projectName" android:text="@string/placeholder_name" android:textStyle="bold"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/projectDescription" android:editText="@string/placeholder_description"/>
+            android:layout_height="wrap_content" android:id="@+id/projectDescription" android:text="@string/placeholder_description"/>
     </LinearLayout>
 
     <Button
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content" android:id="@+id/gotoButton" android:editText="@string/enter_project" android:textSize="14sp"/>
+        android:layout_height="wrap_content" android:id="@+id/gotoButton" android:text="@string/enter_project" android:textSize="14sp"/>
 </LinearLayout>

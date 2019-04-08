@@ -1,9 +1,8 @@
-package com.redsponge.mycoolapp.utils;
+package com.redsponge.mycoolapp.utils.alert;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.TextWatcher;
 import android.widget.EditText;
 
 public class AlertUtils {
@@ -36,9 +35,10 @@ public class AlertUtils {
 
         text.requestFocus();
 
-        onTextChanged.setEditText(text);
-        text.addTextChangedListener(onTextChanged);
-
+        if(onTextChanged != null) {
+            onTextChanged.setEditText(text);
+            text.addTextChangedListener(onTextChanged);
+        }
 
         new AlertDialog.Builder(ctx)
                 .setTitle(title)

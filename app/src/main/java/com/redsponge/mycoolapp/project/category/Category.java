@@ -8,25 +8,34 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
  */
 public class Category {
 
-    public final String name;
-    public final int user;
-    public final int id;
+    private String name;
+    private int user;
+    private int id;
 
-    private DatabaseHandler db;
-
-    public Category(int id, String name, int user, DatabaseHandler db) {
+    public Category(int id, String name, int user) {
         this.name = name;
         this.user = user;
         this.id = id;
-        this.db = db;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getUser() {
+        return user;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Category(String name, int user, DatabaseHandler db) {
-        this(0, name, user, db);
+        this(0, name, user);
     }
 
     @Override
     public String toString() {
-        return name + " (" + db.getProjectAmountInCategory(id, user) + ")";
+        return name + " (" + DatabaseHandler.getInstance().getProjectAmountInCategory(id, user) + ")";
     }
 }

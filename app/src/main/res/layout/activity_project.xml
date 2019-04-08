@@ -6,13 +6,13 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:editText="@string/project_title_placeholder" android:gravity="center"
+        android:layout_height="0dp" android:layout_weight="1" android:text="@string/project_title_placeholder" android:gravity="center"
         android:onClick="changeName"
         android:clickable="true"
         android:textSize="36sp" android:id="@+id/projectTitle"/>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="0.5" android:editText="@string/project_description_placeholder" android:gravity="center"
+        android:layout_height="0dp" android:layout_weight="0.5" android:text="@string/project_description_placeholder" android:gravity="center"
         android:id="@+id/projectDescription" android:textSize="18sp"
         android:clickable="true"
         android:onClick="editDescription"/>
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="tryInviteUser"
-                android:editText="Invite" />
+                android:text="Invite" />
         </LinearLayout>
 
             <Button
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:onClick="editCategory"
-                android:editText="Change Category" />
+                android:text="Change Category" />
         <Button
             android:id="@+id/deleteProject"
             android:layout_width="wrap_content"
@@ -69,6 +69,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:editText="Delete Project" />
+            android:text="Delete Project" />
     </RelativeLayout>
 </LinearLayout>

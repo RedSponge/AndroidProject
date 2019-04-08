@@ -5,7 +5,7 @@
     android:weightSum="4">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:editText="Settings"
+        android:layout_height="0dp" android:layout_weight="1" android:text="Settings"
         style="@style/ProjectsViewTitle"/>
 
     <TableLayout
@@ -15,7 +15,7 @@
             <EditText android:hint="Change Username"
                 android:id="@+id/usernameChangeInput"
                 android:layout_width="0dp" android:layout_weight="3" />
-            <Button android:layout_weight="1" android:layout_width="0dp" android:editText="Set" android:onClick="changeUsername"/>
+            <Button android:layout_weight="1" android:layout_width="0dp" android:text="Set" android:onClick="changeUsername"/>
         </TableRow>
 
         <TableRow android:layout_weight="4">
@@ -23,7 +23,7 @@
                 android:id="@+id/passwordChangeInput"
                 android:inputType="textPassword"
                 android:layout_width="0dp" android:layout_weight="3" />
-            <Button android:layout_weight="1" android:layout_width="0dp" android:editText="Set" android:onClick="changePassword"/>
+            <Button android:layout_weight="1" android:layout_width="0dp" android:text="Set" android:onClick="changePassword"/>
         </TableRow>
 
     </TableLayout>

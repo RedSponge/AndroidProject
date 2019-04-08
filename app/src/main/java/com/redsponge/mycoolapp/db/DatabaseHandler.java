@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.invite.Invite;
@@ -122,7 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         // Create user
-        db.execSQL("INSERT INTO users (user_name, user_password) VALUES(?, ?)",new Object[] {user.name, user.password});
+        db.execSQL("INSERT INTO users (user_name, user_password) VALUES(?, ?)",new Object[] {user.getName(), user.getPassword()});
 
         // Fetch new id
         Cursor c = db.rawQuery("SELECT user_id FROM users ORDER BY user_id DESC", null);
@@ -163,7 +164,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         // Create project
-        db.execSQL("INSERT INTO projects (proj_name, proj_description) VALUES(?, ?)", new Object[] {project.name, project.description});
+        db.execSQL("INSERT INTO projects (proj_name, proj_description) VALUES(?, ?)", new Object[] {project.getName(), project.getDescription()});
 
         // Fetch new id
         Cursor c = db.rawQuery("SELECT proj_id FROM projects ORDER BY proj_id DESC", null);
@@ -247,7 +248,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void addInvite(Invite invite) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO invites (from_id, to_id, proj_id, should_be_admin) VALUES (?, ?, ?, ?)", new Object[] {invite.idFrom, invite.idTo, invite.projectId, invite.shouldBeAdmin});
+        db.execSQL("INSERT INTO invites (from_id, to_id, proj_id, should_be_admin) VALUES (?, ?, ?, ?)", new Object[] {invite.getIdFrom(), invite.getIdTo(), invite.getProjectId(), invite.getShouldBeAdmin()});
         db.close();
     }
 
@@ -326,7 +327,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void removeInvite(Invite invite) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM invites WHERE from_id = ? AND to_id = ? AND proj_id = ?", new Object[] {invite.idFrom, invite.idTo, invite.projectId});
+        db.execSQL("DELETE FROM invites WHERE from_id = ? AND to_id = ? AND proj_id = ?", new Object[] {invite.getIdFrom(), invite.getIdTo(), invite.getProjectId()});
         db.close();
     }
 
@@ -400,7 +401,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT category_id, category_name, user_id FROM categories WHERE user_id = " + user, null);
 
         while(c.moveToNext()) {
-            categories.add(new Category(c.getInt(0), c.getString(1), c.getInt(2), this));
+            categories.add(new Category(c.getInt(0), c.getString(1), c.getInt(2)));
         }
 
         c.close();
@@ -414,7 +415,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void addCategory(Category c) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("INSERT INTO categories (category_name, user_id) VALUES(?, ?)", new Object[] {c.name, c.user});
+        db.execSQL("INSERT INTO categories (category_name, user_id) VALUES(?, ?)", new Object[] {c.getName(), c.getUser()});
         db.close();
     }
 
@@ -508,7 +509,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Category cat = null;
 
         if(c.moveToFirst()) {
-            cat = new Category(c.getInt(0), c.getString(1), c.getInt(2), this);
+            cat = new Category(c.getInt(0), c.getString(1), c.getInt(2));
         }
 
         c.close();
@@ -543,7 +544,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         List<User> users = new ArrayList<User>();
         for(User u : getAllUsers()) {
-            if(!isInvited(u.id, project) && !isPartOfProject(u.id, project)) {
+            if(!isInvited(u.getId(), project) && !isPartOfProject(u.getId(), project)) {
                 users.add(u);
             }
         }

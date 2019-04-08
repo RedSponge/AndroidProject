@@ -10,7 +10,7 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 import java.util.Objects;
 
 /**
- * A base class for all activities of this program
+ * A base class for all activities of this app
  */
 public abstract class AbstractActivity extends Activity {
 

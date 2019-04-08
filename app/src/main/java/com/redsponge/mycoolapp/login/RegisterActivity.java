@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
-import com.redsponge.mycoolapp.utils.AlertUtils;
+import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.R;
 
 public class RegisterActivity extends AbstractActivity {

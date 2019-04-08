@@ -5,7 +5,7 @@
     android:weightSum="8">
 
     <TextView
-       style="@style/Title" android:editText="Create new account" android:layout_weight="1"/>
+       style="@style/Title" android:text="Create new account" android:layout_weight="1"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,7 +16,7 @@
 
         <EditText
             android:hint="Username"
-            android:inputType="editText"
+            android:inputType="text"
             android:maxLength="16"
             style="@style/LoginInput"
             android:id="@+id/usernameInput"/>
@@ -41,6 +41,6 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="50dp"
             android:onClick="registerUser"
-            android:editText="Register" />
+            android:text="Register" />
     </LinearLayout>
 </LinearLayout>

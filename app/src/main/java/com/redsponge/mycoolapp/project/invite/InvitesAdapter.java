@@ -39,14 +39,14 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
         Button accept = (Button) convertView.findViewById(R.id.acceptButton);
         Button decline = (Button) convertView.findViewById(R.id.declineButton);
         ImageView image = (ImageView) convertView.findViewById(R.id.projectIcon);
-        name.setText(db.getProject(invite.projectId).name);
+        name.setText(db.getProject(invite.getProjectId()).getName());
 
-        from.setText(String.format(getContext().getString(R.string.placeholder_invite_from), db.getUser(invite.idFrom).name));
+        from.setText(String.format(getContext().getString(R.string.placeholder_invite_from), db.getUser(invite.getIdFrom()).getName()));
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.linkProjectToUser(invite.projectId, invite.idTo, invite.shouldBeAdmin == 1);
+                db.linkProjectToUser(invite.getProjectId(), invite.getIdTo(), invite.getShouldBeAdmin() == 1);
                 db.removeInvite(invite);
                 remove(invite);
             }
@@ -60,7 +60,7 @@ public class InvitesAdapter extends ArrayAdapter<Invite> {
             }
         });
 
-        String icon = db.getIcon(invite.projectId);
+        String icon = db.getIcon(invite.getProjectId());
         if(icon != null) {
             image.setImageBitmap(ImageUtils.decode(icon));
         } else {

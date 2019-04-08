@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.project.Project;
+import com.redsponge.mycoolapp.project.ProjectActivity;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 
 import java.util.ArrayList;
@@ -53,16 +55,16 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
             }
         });
 
-        name.setText(project.name);
+        name.setText(project.getName());
 
-        String descriptionText = project.description;
+        String descriptionText = project.getDescription();
         if(descriptionText.length() > 30) {
             descriptionText = descriptionText.substring(0, 30) + "...";
         }
 
         description.setText(descriptionText);
 
-        String icon = db.getIcon(project.id);
+        String icon = db.getIcon(project.getId());
         if(icon != null) {
             image.setImageBitmap(ImageUtils.decode(icon));
         } else {

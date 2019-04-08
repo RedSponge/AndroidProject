@@ -2,7 +2,6 @@ package com.redsponge.mycoolapp.project;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -72,7 +71,7 @@ public class ProjectViewActivity extends AbstractActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 findViewById(R.id.deleteCategoryButton)
-                        .setEnabled(Objects.requireNonNull(categoryAdapter.getItem(position)).id != Constants.CATEGORY_ALL_ID);
+                        .setEnabled(Objects.requireNonNull(categoryAdapter.getItem(position)).getId() != Constants.CATEGORY_ALL_ID);
                 queryProjects();
             }
 
@@ -89,7 +88,7 @@ public class ProjectViewActivity extends AbstractActivity {
     private void queryCategories() {
         categoryAdapter.clear();
 
-        categoryAdapter.add(new Category(Constants.CATEGORY_ALL_ID, "All", currentUser, db));
+        categoryAdapter.add(new Category(Constants.CATEGORY_ALL_ID, "All", currentUser));
 
         for(Category c : db.getCategories(currentUser)) {
             categoryAdapter.add(c);
@@ -107,12 +106,12 @@ public class ProjectViewActivity extends AbstractActivity {
         if(c == null) {
             projects = db.getAllProjects(currentUser);
         } else {
-            projects = db.getProjectsForCategory(currentUser, c.id);
+            projects = db.getProjectsForCategory(currentUser, c.getId());
         }
 
         projectsAdapter.addAll(projects);
 
-        String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).name);
+        String welcome = String.format(getString(R.string.placeholder_welcome), db.getUser(currentUser).getName());
         ((TextView) findViewById(R.id.welcome_message)).setText(welcome);
     }
 
@@ -217,7 +216,7 @@ public class ProjectViewActivity extends AbstractActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        db.deleteCategory(((Category) categorySelector.getSelectedItem()).id);
+                        db.deleteCategory(((Category) categorySelector.getSelectedItem()).getId());
                         queryCategories();
                     }
                 })

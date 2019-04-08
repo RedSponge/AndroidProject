@@ -1,16 +1,11 @@
 package com.redsponge.mycoolapp.login;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.redsponge.mycoolapp.project.ProjectViewActivity;
 import com.redsponge.mycoolapp.R;
-import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
 
@@ -51,11 +46,11 @@ public class LoginActivity extends AbstractActivity {
         int hashedPw = LoginUtils.hashPw(password);
         User user = db.getUser(username);
 
-        if(user != null && user.password == hashedPw) {
+        if(user != null && user.getPassword() == hashedPw) {
             if(keepLoggedIn.isChecked()) {
-                LoginUtils.registerCurrentUser(this,user.id);
+                LoginUtils.registerCurrentUser(this, user.getId());
             }
-            currentUser = user.id;
+            currentUser = user.getId();;
             switchToActivity(ProjectViewActivity.class, true);
         } else {
             this.username.setError("Unknown username or password!");

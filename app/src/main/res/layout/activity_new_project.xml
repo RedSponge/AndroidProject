@@ -6,7 +6,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:editText="@string/new_project_title"
+        android:layout_height="0dp" android:layout_weight="1" android:text="@string/new_project_title"
         style="@style/Title"/>
 
     <LinearLayout
@@ -18,13 +18,13 @@
 
         <EditText
             android:hint="Project Name"
-            android:inputType="editText|textMultiLine"
+            android:inputType="text|textMultiLine"
             style="@style/LoginInput"
             android:id="@+id/projectNameInput"/>
 
         <EditText
             android:hint="Project Description"
-            android:inputType="editText|textMultiLine"
+            android:inputType="text|textMultiLine"
             style="@style/LoginInput"
 
             android:id="@+id/projectDescriptionInput"/>
@@ -37,6 +37,6 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="50dp"
             android:onClick="createProject"
-            android:editText="Create" />
+            android:text="Create" />
     </LinearLayout>
 </LinearLayout>
