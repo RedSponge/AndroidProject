@@ -88,7 +88,7 @@ public class ProjectActivity extends AbstractActivity {
             deleteButton.setText(R.string.leave_project_text);
         }
 
-        ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUnInvitedUsers(project.getId()));
+        ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUninvitedUsers(project.getId()));
         inviteUserInput.setAdapter(names);
     }
 

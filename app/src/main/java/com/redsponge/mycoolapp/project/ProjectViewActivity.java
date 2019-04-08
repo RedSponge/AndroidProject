@@ -188,7 +188,7 @@ public class ProjectViewActivity extends AbstractActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(db.getCategory(currentUser, s.toString()) != null) {
+                if(db.getCategoryByName(currentUser, s.toString()) != null) {
                     input.setError(getString(R.string.category_name_taken_error));
                     okButton.setEnabled(false);
                 } else {
