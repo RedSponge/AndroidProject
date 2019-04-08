@@ -190,15 +190,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Restarts the database
-     */
-    public void restart() {
-        SQLiteDatabase db = getWritableDatabase();
-        deleteTables(db);
-        onCreate(db);
-    }
-
-    /**
      * Removes the project and all of it's links
      * @param id The project's id
      */
@@ -233,8 +224,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Sets a project's description to something new
-     * @param id
-     * @param description
+     * @param id The project's id
+     * @param description The project's new description
      */
     public void updateProjectDescription(int id, String description) {
         SQLiteDatabase db = getWritableDatabase();
