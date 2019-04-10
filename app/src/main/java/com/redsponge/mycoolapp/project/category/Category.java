@@ -4,7 +4,7 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 
 /**
  * A category, which is used to sort projects into
- * A project may be in many categories - one per user
+ * A project may be in many categories. each user has their own individual categories.
  */
 public class Category {
 
