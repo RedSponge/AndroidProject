@@ -76,6 +76,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // region users
 
+
+    /**
+     * Gets all users whom are not invited to a certain project
+     *
+     * @param project The project to check on
+     * @return A list containing all uninvited users
+     */
+    public List<User> getUninvitedUsers(int project) {
+
+        List<User> users = new ArrayList<User>();
+        for (User u : getAllUsers()) {
+            if (!isInvited(u.getId(), project) && !isPartOfProject(u.getId(), project)) {
+                users.add(u);
+            }
+        }
+        return users;
+    }
+
     /**
      * Finds a user by id
      *
@@ -184,9 +202,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return users;
     }
+
+    /**
+     * Unlinks a user from a project, making them not part of it
+     *
+     * @param project The project's id
+     * @param user The user's id
+     */
+    public void unlinkProjectFromUser(int project, int user) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user);
+
+        unlinkProjectFromUserCategories(project, user);
+    }
     // endregion
 
     // region projects
+
     /**
      * Gets all the projects of a user
      *
@@ -360,6 +392,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Changes a project's name
+     * @param project The project's id
+     * @param name The project's new name
+     */
+    public void setProjectName(int project, String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE projects SET proj_name = ? WHERE proj_id = ?", new Object[]{name, project});
+
+    }
     // endregion
 
     // region invites
@@ -446,6 +488,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // endregion
 
     // region categories
+
+    /**
+     * Checks if a project is in a certain category
+     *
+     * @param project The project's id
+     * @param category The category's id
+     * @return Is the project in the category?
+     */
+    public boolean isProjectInCategory(int project, int category) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM category_links WHERE proj_id = " + project + " AND category_id = " + category, null);
+
+        boolean inside = c.getCount() == 1;
+
+        c.close();
+
+
+        return inside;
+    }
 
     /**
      * Fetches all categories for a user
@@ -601,64 +662,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // endregion
-
-    /**
-     * Gets all users whom are not invited to a certain project
-     *
-     * @param project The project to check on
-     * @return A list containing all uninvited users
-     */
-    public List<User> getUninvitedUsers(int project) {
-
-        List<User> users = new ArrayList<User>();
-        for (User u : getAllUsers()) {
-            if (!isInvited(u.getId(), project) && !isPartOfProject(u.getId(), project)) {
-                users.add(u);
-            }
-        }
-        return users;
-    }
-
-    /**
-     * Unlinks a user from a project, making them not part of it
-     *
-     * @param project The project's id
-     * @param user The user's id
-     */
-    public void unlinkProjectFromUser(int project, int user) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user);
-
-        unlinkProjectFromUserCategories(project, user);
-    }
-
-    /**
-     * Checks if a project is in a certain category
-     *
-     * @param project The project's id
-     * @param category The category's id
-     * @return Is the project in the category?
-     */
-    public boolean isProjectInCategory(int project, int category) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM category_links WHERE proj_id = " + project + " AND category_id = " + category, null);
-
-        boolean inside = c.getCount() == 1;
-
-        c.close();
-
-
-        return inside;
-    }
-
-    /**
-     * Changes a project's name
-     * @param project The project's id
-     * @param name The project's new name
-     */
-    public void setProjectName(int project, String name) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("UPDATE projects SET proj_name = ? WHERE proj_id = ?", new Object[]{name, project});
-
-    }
 }
