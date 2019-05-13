@@ -74,4 +74,18 @@ public class Tables {
                 ")";
     }
 
+    public static class Events {
+        public static final String NAME = "events";
+        public static final String DECLARATION =
+                "TABLE events (\n" +
+                "    event_name TEXT NOT NULL,\n" +
+                "    event_time INTEGER NOT NULL,\n" +
+                "    event_status INTEGER NOT NULL,\n" +
+                "    event_project INTEGER NOT NULL,\n" +
+                "    event_id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    FOREIGN KEY (event_project) REFERENCES projects(proj_id)\n" +
+                ")";
+                
+    }
+
 }

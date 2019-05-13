@@ -44,6 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("CREATE " + Tables.Invites.DECLARATION);
         db.execSQL("CREATE " + Tables.Categories.DECLARATION);
         db.execSQL("CREATE " + Tables.CategoryLinks.DECLARATION);
+        db.execSQL("CREATE " + Tables.Events.DECLARATION);
     }
 
     /**
@@ -58,6 +59,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tables.Invites.NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.Categories.NAME);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.CategoryLinks.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.Events.NAME);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // endregion
 
-    // region users
+    // region usersgit
 
 
     /**
