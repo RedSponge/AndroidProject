@@ -16,6 +16,10 @@ public class Event {
         this.deadline = deadline;
     }
 
+    public Event(int projectId, String name, int status, int deadline) {
+        this(-1, projectId, name, status, deadline);
+    }
+
     public int getId() {
         return id;
     }
