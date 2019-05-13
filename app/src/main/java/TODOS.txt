@@ -1,6 +1,6 @@
 IM DONE
 also im adding events now
 
-- make EventAdapter
-- connect event adapter to event activity
-- connect event activity layout to event activity class
+- make EventAdapter V
+- connect event adapter to event activity ~
+- connect event activity layout to event activity class ~
