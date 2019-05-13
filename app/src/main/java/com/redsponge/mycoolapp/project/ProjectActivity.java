@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.event.EventsActivity;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
@@ -50,7 +51,7 @@ public class ProjectActivity extends AbstractActivity {
     @Override
     protected void initialize() {
         setContentView(R.layout.activity_project);
-        this.project = (Project) getIntent().getExtras().get("project");
+        this.project = (Project) getIntent().getExtras().get(Constants.EXTRA_PROJECT_ID);
 
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
@@ -303,5 +304,9 @@ public class ProjectActivity extends AbstractActivity {
                 project.setName(input);
             }
         }, null, project.getName());
+    }
+
+    public void enterManageEvents(View view) {
+        switchToActivity(EventsActivity.class, false, Constants.EXTRA_PROJECT_OBJ, project);
     }
 }

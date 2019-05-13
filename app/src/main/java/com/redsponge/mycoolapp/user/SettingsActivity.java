@@ -3,6 +3,7 @@ package com.redsponge.mycoolapp.user;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.login.LoginUtils;
@@ -42,7 +43,7 @@ public class SettingsActivity extends AbstractActivity {
             @Override
             public void run() {
                 db.updateUserName(currentUser, usernameInput.getText().toString());
-                AlertUtils.showAlert(SettingsActivity.this, "Success!", "Changed your username to " + usernameInput.getText().toString(), null);
+                Toast.makeText(SettingsActivity.this, "Changed your username successfully!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -60,7 +61,7 @@ public class SettingsActivity extends AbstractActivity {
             @Override
             public void run() {
                 db.updatePassword(currentUser, LoginUtils.hashPw(passwordInput.getText().toString()));
-                AlertUtils.showAlert(SettingsActivity.this, "Success!", "Changed your password to " + passwordInput.getText().toString(), null);
+                Toast.makeText(SettingsActivity.this, "Changed your password successfully!", Toast.LENGTH_LONG).show();
             }
         });
     }

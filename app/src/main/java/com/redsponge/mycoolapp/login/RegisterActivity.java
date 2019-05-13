@@ -3,6 +3,7 @@ package com.redsponge.mycoolapp.login;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
@@ -52,13 +53,9 @@ public class RegisterActivity extends AbstractActivity {
     }
 
     private void createUser(String username, String password) {
-        AlertUtils.showAlert(this, "Success!", "Account created! username: " + username + ", password: " + password, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
         User user = new User(username, password);
         db.addUser(user);
+        Toast.makeText(this, "Account created!", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

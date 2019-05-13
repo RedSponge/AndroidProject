@@ -4,9 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.event.Event;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.Constants;
@@ -664,4 +666,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // endregion
+
+    public List<Event> getEventsForProject(int project) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project + " SORT BY event_time", null);
+
+        ArrayList<Event> lst = new ArrayList<>();
+        while(c.moveToNext()) {
+            lst.add(new Event(c.getInt(0), c.getInt(1), c.getString(2), c.getInt(3), c.getInt(4)));
+        }
+        c.close();
+
+        return lst;
+    }
 }

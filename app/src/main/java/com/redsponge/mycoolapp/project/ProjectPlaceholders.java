@@ -26,7 +26,11 @@ public class ProjectPlaceholders {
 
             "supercalifragilisticexpialidocious",
             "A Normal Name",
-            "A Serious Project"
+            "A Serious Project",
+            "Never gonna give you up",
+            "Never gonna let you down",
+            "Never gonna run around",
+            "And dessert you"
     };
 
     public static final String[] RANDOM_DESCRIPTIONS = {

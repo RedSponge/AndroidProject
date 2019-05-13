@@ -15,6 +15,8 @@ import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.project.ProjectActivity;
+import com.redsponge.mycoolapp.utils.AbstractActivity;
+import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 
 import java.util.ArrayList;
@@ -75,12 +77,6 @@ public class ProjectsAdapter extends ArrayAdapter<Project> {
     }
 
     private void enterProject(Project project) {
-
-        Intent intent = new Intent(getContext(), ProjectActivity.class);
-
-        intent.putExtra("project", project);
-        intent.putExtra("currentUser", currentUser);
-
-        getContext().startActivity(intent);
+        ((AbstractActivity) getContext()).switchToActivity(ProjectActivity.class, false, Constants.EXTRA_PROJECT_OBJ, project);
     }
 }

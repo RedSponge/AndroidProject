@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -23,7 +24,7 @@ public abstract class AbstractActivity extends Activity {
         db = DatabaseHandler.getInstance();
 
         if(getIntent().getExtras() != null) {
-            currentUser = getIntent().getExtras().getInt("currentUser", -1);
+            currentUser = getIntent().getExtras().getInt(Constants.EXTRA_USER_ID, -1);
         } else {
             currentUser = -1;
         }
@@ -41,9 +42,14 @@ public abstract class AbstractActivity extends Activity {
      * @param newActivity The new activity's class
      * @param finish Should this activity be closed after switching
      */
-    protected void switchToActivity(Class<? extends AbstractActivity> newActivity, boolean finish) {
+    public void switchToActivity(Class<? extends AbstractActivity> newActivity, boolean finish, Object... extras) {
         Intent intent = new Intent(this, newActivity);
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra(Constants.EXTRA_USER_ID, currentUser);
+
+        for(int i = 0; i < extras.length / 2; i++) {
+            intent.putExtra((String) extras[i * 2], (Serializable) extras[i * 2 + 1]);
+        }
+
         startActivity(intent);
 
         if(finish) {

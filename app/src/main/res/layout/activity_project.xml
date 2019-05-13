@@ -53,15 +53,29 @@
                 android:text="Invite" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/editCategory"
+            android:padding="10dp" android:weightSum="4"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="0dp" android:layout_weight="2.5"
+                android:layout_height="match_parent" android:gravity="center" android:text="Nearest Project Event" android:textSize="18sp" />
             <Button
-                android:id="@+id/editCategory"
-                android:layout_above="@+id/deleteProject"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:onClick="editCategory"
-                android:text="Change Category" />
+                android:layout_width="0dp" android:layout_weight="1.5"
+                android:layout_height="match_parent" android:text="Manage Events"
+                android:onClick="enterManageEvents"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/editCategory"
+            android:layout_above="@+id/deleteProject"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:onClick="editCategory"
+            android:text="Change Category" />
         <Button
             android:id="@+id/deleteProject"
             android:layout_width="wrap_content"
