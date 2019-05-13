@@ -23,12 +23,10 @@ import java.util.ArrayList;
 
 public class ProjectsAdapter extends ArrayAdapter<Project> {
 
-    private int currentUser;
     private DatabaseHandler db;
 
-    public ProjectsAdapter(Context context, ArrayList<Project> users, int currentUser, DatabaseHandler db) {
+    public ProjectsAdapter(Context context, ArrayList<Project> users, DatabaseHandler db) {
         super(context, R.layout.item_project, users);
-        this.currentUser = currentUser;
         this.db = db;
     }
 

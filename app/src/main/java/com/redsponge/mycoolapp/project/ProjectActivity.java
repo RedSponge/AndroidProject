@@ -51,7 +51,7 @@ public class ProjectActivity extends AbstractActivity {
     @Override
     protected void initialize() {
         setContentView(R.layout.activity_project);
-        this.project = (Project) getIntent().getExtras().get(Constants.EXTRA_PROJECT_ID);
+        this.project = (Project) getIntent().getExtras().get(Constants.EXTRA_PROJECT_OBJ);
 
         this.title = (TextView) findViewById(R.id.projectTitle);
         this.description = (TextView) findViewById(R.id.projectDescription);
@@ -289,7 +289,7 @@ public class ProjectActivity extends AbstractActivity {
                 project.setDescription(input);
                 setupDisplay();
             }
-        }, null, project.getDescription());
+        }, null, project.getDescription(), false, "New Description");
     }
 
     /**
@@ -303,7 +303,7 @@ public class ProjectActivity extends AbstractActivity {
                 title.setText(input);
                 project.setName(input);
             }
-        }, null, project.getName());
+        }, null, project.getName(), false, "New Name");
     }
 
     public void enterManageEvents(View view) {

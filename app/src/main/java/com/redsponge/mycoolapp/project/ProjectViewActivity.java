@@ -52,7 +52,7 @@ public class ProjectViewActivity extends AbstractActivity {
             return;
         }
 
-        projectsAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), currentUser, db);
+        projectsAdapter = new ProjectsAdapter(this, new ArrayList<Project>(), db);
 
         projectViewList = (ListView) findViewById(R.id.projectViewList);
         projectViewList.setAdapter(projectsAdapter);

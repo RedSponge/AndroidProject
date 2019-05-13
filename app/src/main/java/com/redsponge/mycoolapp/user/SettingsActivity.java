@@ -81,6 +81,6 @@ public class SettingsActivity extends AbstractActivity {
                     AlertUtils.showAlert(SettingsActivity.this, "Error", "Incorrect password!", null);
                 }
             }
-        }, null, null);;
+        }, null, null, true, "Enter Password");
     }
 }

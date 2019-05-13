@@ -3,6 +3,7 @@ package com.redsponge.mycoolapp.utils.alert;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputType;
 import android.widget.EditText;
 
 public class AlertUtils {
@@ -23,9 +24,11 @@ public class AlertUtils {
      * @param onOk What happens when the text is submitted,
      * @param onTextChanged A listener to when the text changes
      * @param preEnteredText Text that is written in the input {@link EditText} when the popup is opened
+     * @param isPassword Should the TextView be displayed as a password (dots)
+     * @param hint Sets the hint of the edittext if not null
      *
      */
-    public static void showTextPrompt(Context ctx, String title, OnTextAcceptListener onOk, PopupTextWatcher onTextChanged, String preEnteredText) {
+    public static void showTextPrompt(Context ctx, String title, OnTextAcceptListener onOk, PopupTextWatcher onTextChanged, String preEnteredText, boolean isPassword, String hint) {
         EditText text = new EditText(ctx);
 
         if(preEnteredText != null) {
@@ -33,6 +36,12 @@ public class AlertUtils {
             text.setSelection(0, preEnteredText.length());
         }
 
+        if(isPassword) {
+            text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        if(hint != null) {
+            text.setHint(hint);
+        }
         text.requestFocus();
 
         if(onTextChanged != null) {
