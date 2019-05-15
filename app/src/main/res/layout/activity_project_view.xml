@@ -63,19 +63,22 @@
             android:layout_alignParentBottom="true"
 
             android:layout_below="@+id/categorySelector">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:text="Add Category"
-                android:onClick="addCategory"
-                android:textSize="16dp"
-                />
 
             <Button
+                android:id="@+id/addCategoryButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:text="Delete Category"
-                android:onClick="deleteCategory"
+                android:layout_height="match_parent"
+                android:onClick="addCategory"
+                android:text="Add Category"
+                android:textSize="16sp" />
+
+            <Button
                 android:id="@+id/deleteCategoryButton"
-                android:textSize="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="deleteCategory"
+                android:text="Delete Category"
+                android:textSize="16sp"
                 />
         </LinearLayout>
     </RelativeLayout>

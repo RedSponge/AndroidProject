@@ -35,7 +35,9 @@ public class DateTextView extends TextView {
     }
 
     private void initialize() {
+        setTextSize(18f);
         cal = Calendar.getInstance();
+
         setClickable(true);
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
@@ -67,6 +69,6 @@ public class DateTextView extends TextView {
     }
 
     private void updateDisplay() {
-        setText(String.format(Locale.ENGLISH, "%2d/%2d/%4d", day, month, year));
+        setText(String.format(Locale.ENGLISH, "%02d/%02d/%04d", day, month, year));
     }
 }
