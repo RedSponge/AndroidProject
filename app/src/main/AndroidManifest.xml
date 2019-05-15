@@ -20,6 +20,7 @@
         <activity android:name=".login.RegisterActivity"/>
         <activity android:name=".project.invite.InviteViewActivity"/>
         <activity android:name=".project.event.EventsActivity"/>
+        <activity android:name=".project.event.NewEventActivity"/>
 
         <activity android:name=".login.LoginActivity">
             <intent-filter>

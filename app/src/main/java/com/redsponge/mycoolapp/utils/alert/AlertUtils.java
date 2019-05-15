@@ -9,6 +9,13 @@ import android.widget.EditText;
 public class AlertUtils {
 
 
+    /**
+     * Shows an alert to the user with an OK button
+     * @param ctx The context calling this method
+     * @param title The alert's title
+     * @param content The alert's contents
+     * @param listener A listener for when OK has been pressed
+     */
     public static void showAlert(Context ctx, String title, String content, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(ctx)
                 .setTitle(title)
@@ -28,7 +35,7 @@ public class AlertUtils {
      * @param hint Sets the hint of the edittext if not null
      *
      */
-    public static void showTextPrompt(Context ctx, String title, OnTextAcceptListener onOk, PopupTextWatcher onTextChanged, String preEnteredText, boolean isPassword, String hint) {
+    public static void showTextPrompt(Context ctx, String title, OnTextAcceptListener onOk, AlertPromptTextWatcher onTextChanged, String preEnteredText, boolean isPassword, String hint) {
         EditText text = new EditText(ctx);
 
         if(preEnteredText != null) {
@@ -82,5 +89,4 @@ public class AlertUtils {
                 })
                 .show();
     }
-
 }

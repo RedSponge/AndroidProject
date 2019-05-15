@@ -1,5 +1,6 @@
 package com.redsponge.mycoolapp.project.event;
 
+import android.view.View;
 import android.widget.ListView;
 
 import com.redsponge.mycoolapp.R;
@@ -22,5 +23,9 @@ public class EventsActivity extends AbstractActivity {
         this.eventAdapter.add(new Event(1, "Test", 3, 100));
 
         this.eventList.setAdapter(this.eventAdapter);
+    }
+
+    public void addEvent(View view) {
+        switchToActivity(NewEventActivity.class, false);
     }
 }

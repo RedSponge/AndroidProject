@@ -4,11 +4,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public abstract class PopupTextWatcher implements TextWatcher {
+public abstract class AlertPromptTextWatcher implements TextWatcher {
 
     private EditText editText;
 
-    public PopupTextWatcher() {}
+    public AlertPromptTextWatcher() {}
 
     public void setEditText(EditText editText) {
         this.editText = editText;
