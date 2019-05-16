@@ -19,7 +19,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "projects.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static DatabaseHandler INSTANCE;
 
@@ -667,9 +667,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // endregion
 
+    /**
+     * Finds all event for a project
+     * @param project The project to search events for
+     * @return The events matching the project
+     */
     public List<Event> getEventsForProject(int project) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project + " SORT BY event_time", null);
+        Cursor c = db.rawQuery("SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project + " ORDER BY event_time", null);
 
         ArrayList<Event> lst = new ArrayList<>();
         while(c.moveToNext()) {
@@ -678,5 +683,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.close();
 
         return lst;
+    }
+
+    /**
+     * Adds a new event to the database
+     * @param event The new event to add
+     * @return The new event's id
+     */
+    public int addEvent(Event event) {
+        int id;
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("INSERT INTO events (event_project, event_name, event_status, event_time) VALUES (?, ?, ?, ?)", new Object[] {
+                event.getProjectId(), event.getName(), event.getStatus(), event.getDeadline()
+        });
+
+        Cursor c = db.rawQuery("SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1", null);
+
+        if(c.moveToNext()) {
+            id = c.getInt(0);
+        } else {
+            c.close();
+            throw new RuntimeException("Couldn't Find Id! This should never happen!");
+        }
+
+        c.close();
+        return id;
+    }
+
+    public void deleteEvent(int eventId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM events WHERE event_id = " + eventId);
     }
 }

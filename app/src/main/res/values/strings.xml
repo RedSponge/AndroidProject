@@ -20,6 +20,9 @@
     <string name="project_name_empty_error">Name cannot be empty!</string>
     <string name="leave_project_text">Leave Project</string>
     <string name="category_name_placeholder">Category Name (0)</string>
+    <string name="new_event_title">Create New Event</string>
+    <string name="date_text_view_preview">dd/mm/yyyy</string>
+    <string name="nearest_project_event_preview">Nearest Project Event:\n%s</string>
 
 
 </resources>

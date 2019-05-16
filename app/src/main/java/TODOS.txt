@@ -4,3 +4,5 @@ also im adding events now
 [v] make EventAdapter
 [~] connect event adapter to event activity
 [~] connect event activity layout to event activity class
+
+Add onResume to project activity

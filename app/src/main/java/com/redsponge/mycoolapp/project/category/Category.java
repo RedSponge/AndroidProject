@@ -30,7 +30,7 @@ public class Category {
         return id;
     }
 
-    public Category(String name, int user, DatabaseHandler db) {
+    public Category(String name, int user) {
         this(0, name, user);
     }
 

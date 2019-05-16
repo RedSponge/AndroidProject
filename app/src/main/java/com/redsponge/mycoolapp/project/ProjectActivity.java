@@ -20,7 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.event.Event;
 import com.redsponge.mycoolapp.project.event.EventsActivity;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
@@ -29,6 +31,8 @@ import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
 import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
+
+import java.util.List;
 
 /**
  * An activity which displays a single project, in which the user can configure that project.
@@ -40,6 +44,7 @@ public class ProjectActivity extends AbstractActivity {
     private Project project;
     private TextView title;
     private TextView description;
+    private TextView eventPreview;
 
     private AutoCompleteTextView inviteUserInput;
 
@@ -58,7 +63,7 @@ public class ProjectActivity extends AbstractActivity {
         this.inviteUserInput = (AutoCompleteTextView) findViewById(R.id.inviteNameInput);
         this.imgView = (ImageView) findViewById(R.id.projectIcon);
         this.deleteButton = (Button) findViewById(R.id.deleteProject);
-
+        this.eventPreview = (TextView) findViewById(R.id.nearestEventDisplay);
         setupDisplay();
     }
 
@@ -91,6 +96,15 @@ public class ProjectActivity extends AbstractActivity {
 
         ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUninvitedUsers(project.getId()));
         inviteUserInput.setAdapter(names);
+
+        List<Event> events = DatabaseHandler.getInstance().getEventsForProject(project.getId());
+        String fill;
+        if(events.size() > 0) {
+            fill = events.get(0).getName();
+        } else {
+            fill = "There are no events for this project!";
+        }
+        eventPreview.setText(String.format(getString(R.string.nearest_project_event_preview), fill));
     }
 
     /**

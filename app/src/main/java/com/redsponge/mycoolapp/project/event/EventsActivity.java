@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.redsponge.mycoolapp.R;
+import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
 import com.redsponge.mycoolapp.utils.Constants;
@@ -20,12 +21,23 @@ public class EventsActivity extends AbstractActivity {
         this.project = (Project) getIntent().getExtras().get(Constants.EXTRA_PROJECT_OBJ);
         this.eventList = (ListView) findViewById(R.id.event_list);
         this.eventAdapter = new EventAdapter(this);
-        this.eventAdapter.add(new Event(1, "Test", 3, 100));
-
         this.eventList.setAdapter(this.eventAdapter);
+
+        updateEventAdapter();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateEventAdapter();
+    }
+
+    private void updateEventAdapter() {
+        this.eventAdapter.clear();
+        this.eventAdapter.addAll(DatabaseHandler.getInstance().getEventsForProject(project.getId()));
     }
 
     public void addEvent(View view) {
-        switchToActivity(NewEventActivity.class, false);
+        switchToActivity(NewEventActivity.class, false, Constants.EXTRA_PROJECT_OBJ, project);
     }
 }

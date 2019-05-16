@@ -6,9 +6,9 @@ public class Event {
     private int projectId;
     private String name;
     private int status;
-    private int deadline;
+    private long deadline;
 
-    public Event(int id, int projectId, String name, int status, int deadline) {
+    public Event(int id, int projectId, String name, int status, long deadline) {
         this.id = id;
         this.projectId = projectId;
         this.name = name;
@@ -16,7 +16,7 @@ public class Event {
         this.deadline = deadline;
     }
 
-    public Event(int projectId, String name, int status, int deadline) {
+    public Event(int projectId, String name, int status, long deadline) {
         this(-1, projectId, name, status, deadline);
     }
 
@@ -52,7 +52,7 @@ public class Event {
         this.status = status;
     }
 
-    public int getDeadline() {
+    public long getDeadline() {
         return deadline;
     }
 

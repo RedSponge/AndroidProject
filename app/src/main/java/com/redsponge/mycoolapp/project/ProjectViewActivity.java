@@ -174,7 +174,7 @@ public class ProjectViewActivity extends AbstractActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = input.getText().toString();
-                        db.addCategory(new Category(name, currentUser, db));
+                        db.addCategory(new Category(name, currentUser));
                         queryCategories();
                     }
                 })

@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:weightSum="8">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="8">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:text="Create New Event" style="@style/Title" />
+        android:layout_height="0dp" android:layout_weight="1" android:text="@string/new_event_title" style="@style/Title" />
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="6"
+        android:layout_height="0dp"
+        android:layout_weight="6"
         android:padding="10dp">
+
         <TableRow android:weightSum="3">
-            <TextView android:text="Event Name" android:layout_weight="1" android:labelFor="@+id/event_name_input"/>
-            <EditText android:layout_weight="2" android:inputType="text" android:id="@+id/event_name_input"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:labelFor="@+id/event_name_input"
+                android:text="Event Name" />
+
+            <EditText
+                android:id="@+id/event_name_input"
+                android:layout_weight="2"
+                android:inputType="text" />
         </TableRow>
+
         <TableRow android:weightSum="3">
-            <TextView android:text="Event Deadline" android:layout_weight="1" android:labelFor="@+id/event_deadline_input"/>
-            <com.redsponge.mycoolapp.utils.DateTextView/>
+            <TextView
+                android:layout_weight="1"
+                android:labelFor="@+id/event_deadline_input"
+                android:text="Event Deadline" />
+
+            <com.redsponge.mycoolapp.utils.DateTextView
+                android:id="@+id/event_deadline_input"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:fontFamily="monospace"/>
         </TableRow>
     </TableLayout>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:text="Create Event"
+        android:layout_height="0dp" android:layout_weight="1" android:text="Create Event!"
+        android:onClick="createEvent"
         style="@style/BottomButton"/>
 
 </LinearLayout>
