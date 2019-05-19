@@ -12,7 +12,11 @@ import android.widget.Toast;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.DateTextView;
+import com.redsponge.mycoolapp.utils.DateUtils;
+import com.redsponge.mycoolapp.utils.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
+import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
 
 public class EventAdapter extends ArrayAdapter<Event> {
 
@@ -27,9 +31,9 @@ public class EventAdapter extends ArrayAdapter<Event> {
         }
 
         final Event event = getItem(position);
-        TextView name = (TextView) convertView.findViewById(R.id.event_name);
+        EditableTextView name = (EditableTextView) convertView.findViewById(R.id.event_name);
         TextView status = (TextView) convertView.findViewById(R.id.event_status);
-        TextView deadline = (TextView) convertView.findViewById(R.id.event_deadline);
+        DateTextView deadline = (DateTextView) convertView.findViewById(R.id.event_deadline);
 
         Button delete = (Button) convertView.findViewById(R.id.event_delete_button);
         Button changeStatus = (Button) convertView.findViewById(R.id.event_change_status_button);
@@ -40,7 +44,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         status.setText(eventStatus.getRepresentation());
         status.setTextColor(eventStatus.getColor());
 
-        deadline.setText("" + event.getDeadline());
+        deadline.setDate(event.getDeadline());
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +65,13 @@ public class EventAdapter extends ArrayAdapter<Event> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Changing Status For Project", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        name.setTextAcceptListener(new OnTextAcceptListener() {
+            @Override
+            public void onTextEntered(DialogInterface dialog, String input) {
+                DatabaseHandler.getInstance().setEventName(event.getId(), input);
             }
         });
 

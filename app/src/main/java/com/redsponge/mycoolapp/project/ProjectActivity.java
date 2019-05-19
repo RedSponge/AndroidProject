@@ -27,6 +27,7 @@ import com.redsponge.mycoolapp.project.event.EventsActivity;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
+import com.redsponge.mycoolapp.utils.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
@@ -42,8 +43,8 @@ public class ProjectActivity extends AbstractActivity {
     private static final int IMAGE_PICK_RESULT = 1;
 
     private Project project;
-    private TextView title;
-    private TextView description;
+    private EditableTextView title;
+    private EditableTextView description;
     private TextView eventPreview;
 
     private AutoCompleteTextView inviteUserInput;
@@ -58,12 +59,29 @@ public class ProjectActivity extends AbstractActivity {
         setContentView(R.layout.activity_project);
         this.project = (Project) getIntent().getExtras().get(Constants.EXTRA_PROJECT_OBJ);
 
-        this.title = (TextView) findViewById(R.id.projectTitle);
-        this.description = (TextView) findViewById(R.id.projectDescription);
+        this.title = (EditableTextView) findViewById(R.id.projectTitle);
+        this.description = (EditableTextView) findViewById(R.id.projectDescription);
         this.inviteUserInput = (AutoCompleteTextView) findViewById(R.id.inviteNameInput);
         this.imgView = (ImageView) findViewById(R.id.projectIcon);
         this.deleteButton = (Button) findViewById(R.id.deleteProject);
         this.eventPreview = (TextView) findViewById(R.id.nearestEventDisplay);
+
+        title.setTextAcceptListener(new OnTextAcceptListener() {
+            @Override
+            public void onTextEntered(DialogInterface dialog, String input) {
+                db.setProjectName(project.getId(), input);
+                project.setName(input);
+            }
+        });
+
+        description.setTextAcceptListener(new OnTextAcceptListener() {
+            @Override
+            public void onTextEntered(DialogInterface dialog, String input) {
+                db.updateProjectDescription(project.getId(), input);
+                project.setDescription(input);
+            }
+        });
+
         setupDisplay();
     }
 
@@ -105,6 +123,12 @@ public class ProjectActivity extends AbstractActivity {
             fill = "There are no events for this project!";
         }
         eventPreview.setText(String.format(getString(R.string.nearest_project_event_preview), fill));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupDisplay();
     }
 
     /**
@@ -290,34 +314,6 @@ public class ProjectActivity extends AbstractActivity {
                     }
                 })
                 .show();
-    }
-
-    /**
-     * Shows a popup to edit the description of a project
-     */
-    public void editDescription(View view) {
-        AlertUtils.showTextPrompt(this, "New Description", new OnTextAcceptListener() {
-            @Override
-            public void onTextEntered(DialogInterface dialog, String input) {
-                db.updateProjectDescription(project.getId(), input);
-                project.setDescription(input);
-                setupDisplay();
-            }
-        }, null, project.getDescription(), false, "New Description");
-    }
-
-    /**
-     * Changes the name of the project
-     */
-    public void changeName(View view) {
-        AlertUtils.showTextPrompt(this, "Change name", new OnTextAcceptListener() {
-            @Override
-            public void onTextEntered(DialogInterface dialog, String input) {
-                db.setProjectName(project.getId(), input);
-                title.setText(input);
-                project.setName(input);
-            }
-        }, null, project.getName(), false, "New Name");
     }
 
     public void enterManageEvents(View view) {

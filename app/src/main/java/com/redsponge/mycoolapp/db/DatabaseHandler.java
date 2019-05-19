@@ -289,7 +289,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM category_links WHERE proj_id = " + id);
         db.execSQL("DELETE FROM projects WHERE proj_id = " + id);
         db.execSQL("DELETE FROM project_groups WHERE proj_id = " + id);
-
+        db.execSQL("DELETE FROM events WHERE event_project = " + id);
     }
 
     /**
@@ -678,7 +678,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ArrayList<Event> lst = new ArrayList<>();
         while(c.moveToNext()) {
-            lst.add(new Event(c.getInt(0), c.getInt(1), c.getString(2), c.getInt(3), c.getInt(4)));
+            lst.add(new Event(c.getInt(0), c.getInt(1), c.getString(2), c.getInt(3), c.getLong(4)));
         }
         c.close();
 
@@ -713,5 +713,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteEvent(int eventId) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM events WHERE event_id = " + eventId);
+    }
+
+    public void setEventName(int eventId, String input) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE events SET event_name = ? WHERE event_id = ?", new Object[] {input, eventId});
     }
 }

@@ -1,5 +1,8 @@
 package com.redsponge.mycoolapp.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class Constants {
 
     public static final int CATEGORY_ALL_ID = -1;
@@ -11,4 +14,6 @@ public class Constants {
     public static final String EXTRA_PROJECT_ID = "project_id";
     public static final String EXTRA_PROJECT_OBJ = "project_obj";
     public static final String EXTRA_USER_ID = "user_id";
+
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
 }

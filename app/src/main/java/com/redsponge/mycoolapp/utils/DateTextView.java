@@ -59,12 +59,7 @@ public class DateTextView extends TextView {
             month = cal.get(Calendar.MONTH);
             day = cal.get(Calendar.DAY_OF_MONTH);
 
-            dpd = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    setDate(year, month, dayOfMonth);
-                }
-            }, year, month, day);
+            setDate(year, month, day);
 
             if(!allowPast) {
                 dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -86,11 +81,23 @@ public class DateTextView extends TextView {
         this.month = month;
         this.year = year;
 
+        dpd = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                setDate(year, month, dayOfMonth);
+            }
+        }, year, month, day);
+
         updateDisplay();
     }
 
+    public void setDate(long time) {
+        cal.setTimeInMillis(time);
+        setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+    }
+
     private void updateDisplay() {
-        setText(String.format(Locale.ENGLISH, "%02d/%02d/%04d", day, month, year));
+        setText(String.format(Locale.ENGLISH, "%02d/%02d/%04d", day, month + 1, year));
     }
 
     public long getAsMilliseconds() {

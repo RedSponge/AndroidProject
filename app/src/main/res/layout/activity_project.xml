@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="7">
 
-    <TextView
+    <com.redsponge.mycoolapp.utils.EditableTextView
+        app:alertTitle="Change Name"
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="1" android:text="@string/project_title_placeholder" android:gravity="center"
-        android:onClick="changeName"
-        android:clickable="true"
         android:textSize="36sp" android:id="@+id/projectTitle"/>
-    <TextView
+
+    <com.redsponge.mycoolapp.utils.EditableTextView
+        app:alertTitle="Change Description"
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="0.5" android:text="@string/project_description_placeholder" android:gravity="center"
-        android:id="@+id/projectDescription" android:textSize="18sp"
-        android:clickable="true"
-        android:onClick="editDescription"/>
+        android:id="@+id/projectDescription" android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/projectIcon"

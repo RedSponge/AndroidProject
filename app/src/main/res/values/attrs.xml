@@ -3,4 +3,7 @@
     <declare-styleable name="DateTextView">
         <attr name="allowPast" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="EditableTextView">
+        <attr name="alertTitle" format="string"/>
+    </declare-styleable>
 </resources>

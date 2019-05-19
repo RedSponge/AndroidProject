@@ -1,5 +1,6 @@
 package com.redsponge.mycoolapp.project.event;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ public class NewEventActivity extends AbstractActivity {
     public void createEvent(View view) {
         String name = nameInput.getText().toString();
         long date = dateInput.getAsMilliseconds();
+
+        Log.i("Events", "" + date);
 
         Event event = new Event(project.getId(), name, EventStatus.TO_DO.getId(), date);
         DatabaseHandler.getInstance().addEvent(event);
