@@ -1,4 +1,4 @@
-package com.redsponge.mycoolapp.utils;
+package com.redsponge.mycoolapp.utils.views;
 
 import android.app.DatePickerDialog;
 import android.content.Context;

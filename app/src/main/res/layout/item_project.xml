@@ -5,7 +5,7 @@
     android:weightSum="5"
     android:padding="5dp">
 
-    <com.redsponge.mycoolapp.utils.SquareImageView
+    <com.redsponge.mycoolapp.utils.views.SquareImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.8"

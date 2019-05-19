@@ -10,7 +10,7 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
 import com.redsponge.mycoolapp.utils.Constants;
-import com.redsponge.mycoolapp.utils.DateTextView;
+import com.redsponge.mycoolapp.utils.views.DateTextView;
 
 public class NewEventActivity extends AbstractActivity {
 

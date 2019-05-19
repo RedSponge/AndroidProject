@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:weightSum="7">
 
-    <com.redsponge.mycoolapp.utils.EditableTextView
+    <com.redsponge.mycoolapp.utils.views.EditableTextView
         app:alertTitle="Change Name"
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="1" android:text="@string/project_title_placeholder" android:gravity="center"
         android:textSize="36sp" android:id="@+id/projectTitle"/>
 
-    <com.redsponge.mycoolapp.utils.EditableTextView
+    <com.redsponge.mycoolapp.utils.views.EditableTextView
         app:alertTitle="Change Description"
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="0.5" android:text="@string/project_description_placeholder" android:gravity="center"

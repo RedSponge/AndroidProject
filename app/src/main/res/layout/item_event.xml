@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="10">
-    <com.redsponge.mycoolapp.utils.EditableTextView
+    <com.redsponge.mycoolapp.utils.views.EditableTextView
         android:layout_width="0dp" android:layout_weight="2"
         app:alertTitle="Change Event Name"
         android:layout_height="match_parent" android:gravity="center" android:text="Event Name" android:id="@+id/event_name" />
 
-    <com.redsponge.mycoolapp.utils.DateTextView
+    <com.redsponge.mycoolapp.utils.views.DateTextView
         android:layout_width="0dp" android:layout_weight="2"
         android:layout_height="match_parent" android:gravity="center" android:id="@+id/event_deadline" />
 

@@ -36,6 +36,10 @@ public class Category {
 
     @Override
     public String toString() {
-        return name + " (" + DatabaseHandler.getInstance().getProjectAmountInCategory(id, user) + ")";
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", user=" + user +
+                ", id=" + id +
+                '}';
     }
 }

@@ -549,7 +549,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Returns the amount of projects in a category
      *
      * @param category The category's id, if equal to {@link Constants#CATEGORY_ALL_ID} then all projects of the user are counted
-     * @param user     The user's id
+     * @param user     The user's id, used when {@link Constants#CATEGORY_ALL_ID} is passed into category
      * @return The amount of projects in that category
      */
     public int getProjectAmountInCategory(int category, int user) {

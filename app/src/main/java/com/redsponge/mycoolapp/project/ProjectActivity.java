@@ -22,12 +22,13 @@ import android.widget.TextView;
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.category.CategoryAdapter;
 import com.redsponge.mycoolapp.project.event.Event;
 import com.redsponge.mycoolapp.project.event.EventsActivity;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
-import com.redsponge.mycoolapp.utils.EditableTextView;
+import com.redsponge.mycoolapp.utils.views.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.Constants;
 import com.redsponge.mycoolapp.utils.ImageUtils;
@@ -280,7 +281,7 @@ public class ProjectActivity extends AbstractActivity {
      */
     public void editCategory(View view) {
         final Spinner spinner = new Spinner(this);
-        final ArrayAdapter<Category> options = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<Category> options = new CategoryAdapter(this);
         spinner.setAdapter(options);
 
         options.add(new Category(Constants.CATEGORY_ALL_ID, "None", currentUser));

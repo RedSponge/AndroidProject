@@ -1,4 +1,4 @@
-package com.redsponge.mycoolapp.utils;
+package com.redsponge.mycoolapp.utils.views;
 
 import android.content.Context;
 import android.content.DialogInterface;

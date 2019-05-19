@@ -19,6 +19,7 @@ import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.login.LoginActivity;
 import com.redsponge.mycoolapp.login.LoginUtils;
 import com.redsponge.mycoolapp.project.category.Category;
+import com.redsponge.mycoolapp.project.category.CategoryAdapter;
 import com.redsponge.mycoolapp.project.invite.InviteViewActivity;
 import com.redsponge.mycoolapp.user.SettingsActivity;
 import com.redsponge.mycoolapp.utils.AbstractActivity;
@@ -57,7 +58,7 @@ public class ProjectViewActivity extends AbstractActivity {
         projectViewList = (ListView) findViewById(R.id.projectViewList);
         projectViewList.setAdapter(projectsAdapter);
 
-        categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_dropdown_item);
+        categoryAdapter = new CategoryAdapter(this);
 
         categorySelector = (Spinner) findViewById(R.id.categorySelector);
         categorySelector.setAdapter(categoryAdapter);

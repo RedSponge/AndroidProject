@@ -12,9 +12,8 @@ import android.widget.Toast;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
-import com.redsponge.mycoolapp.utils.DateTextView;
-import com.redsponge.mycoolapp.utils.DateUtils;
-import com.redsponge.mycoolapp.utils.EditableTextView;
+import com.redsponge.mycoolapp.utils.views.DateTextView;
+import com.redsponge.mycoolapp.utils.views.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
 
