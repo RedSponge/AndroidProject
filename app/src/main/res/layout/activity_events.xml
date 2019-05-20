@@ -4,9 +4,18 @@
     android:layout_height="match_parent"
     android:weightSum="8">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1" android:text="Events" style="@style/Title" />
+        android:layout_height="0dp" android:layout_weight="1" android:weightSum="4">
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" android:layout_centerHorizontal="true" android:text="Events" style="@style/Title" />
+        <CheckBox
+            android:id="@+id/events_show_done"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:text="Show Done"
+            android:layout_alignParentRight="true" android:layout_marginRight="10dp"/>
+    </RelativeLayout>
     <ListView
         android:id="@+id/event_list"
         android:layout_width="match_parent"

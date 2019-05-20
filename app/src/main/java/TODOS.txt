@@ -1,4 +1,5 @@
 IM DONE
 also im adding events now
 
-[!] Make event status clickable, and changeable
+[!] Make show done events checkbox work
+[!] Dance cuz ur done

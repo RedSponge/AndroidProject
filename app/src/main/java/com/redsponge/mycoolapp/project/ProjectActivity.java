@@ -24,6 +24,7 @@ import com.redsponge.mycoolapp.db.DatabaseHandler;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.category.CategoryAdapter;
 import com.redsponge.mycoolapp.project.event.Event;
+import com.redsponge.mycoolapp.project.event.EventStatus;
 import com.redsponge.mycoolapp.project.event.EventsActivity;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
@@ -116,7 +117,8 @@ public class ProjectActivity extends AbstractActivity {
         ArrayAdapter<User> names = new ArrayAdapter<User>(this, android.R.layout.simple_list_item_1, db.getUninvitedUsers(project.getId()));
         inviteUserInput.setAdapter(names);
 
-        List<Event> events = DatabaseHandler.getInstance().getEventsForProject(project.getId());
+        List<Event> events = DatabaseHandler.getInstance().getEventsForProject(project.getId(), EventStatus.DONE.getId());
+
         String fill;
         if(events.size() > 0) {
             fill = events.get(0).getName();

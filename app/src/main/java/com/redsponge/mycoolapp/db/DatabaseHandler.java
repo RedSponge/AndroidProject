@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.redsponge.mycoolapp.project.Project;
@@ -670,11 +671,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Finds all event for a project
      * @param project The project to search events for
+     * @param blacklistedStatuses Which statuses should be blacklisted
      * @return The events matching the project
      */
-    public List<Event> getEventsForProject(int project) {
+    public List<Event> getEventsForProject(int project, int... blacklistedStatuses) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project + " ORDER BY event_time", null);
+        String query = "SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project;
+        for (int blacklistedStatus : blacklistedStatuses) {
+            query += " AND event_status <> " + blacklistedStatus;
+        }
+        query += " ORDER BY event_time";
+        Log.i("DatabaseHandler", query);
+        Cursor c = db.rawQuery(query, null);
 
         ArrayList<Event> lst = new ArrayList<>();
         while(c.moveToNext()) {
@@ -718,5 +726,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void setEventName(int eventId, String input) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE events SET event_name = ? WHERE event_id = ?", new Object[] {input, eventId});
+    }
+
+    public void setEventStatus(int eventId, int status) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE events SET event_status = ? WHERE event_id = ?", new Object[] {status, eventId});
     }
 }

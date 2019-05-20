@@ -2,6 +2,7 @@ package com.redsponge.mycoolapp.project.event;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.redsponge.mycoolapp.R;
 import com.redsponge.mycoolapp.db.DatabaseHandler;
+import com.redsponge.mycoolapp.utils.alert.OnSpinnerAcceptListener;
 import com.redsponge.mycoolapp.utils.views.DateTextView;
 import com.redsponge.mycoolapp.utils.views.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
@@ -30,18 +32,41 @@ public class EventAdapter extends ArrayAdapter<Event> {
         }
 
         final Event event = getItem(position);
+        if(event == null) {
+            Log.wtf("EventAdapter", "Event was null! got position " + position);
+            return null;
+        }
+
         EditableTextView name = (EditableTextView) convertView.findViewById(R.id.event_name);
-        TextView status = (TextView) convertView.findViewById(R.id.event_status);
+        final TextView status = (TextView) convertView.findViewById(R.id.event_status);
         DateTextView deadline = (DateTextView) convertView.findViewById(R.id.event_deadline);
 
         Button delete = (Button) convertView.findViewById(R.id.event_delete_button);
-        Button changeStatus = (Button) convertView.findViewById(R.id.event_change_status_button);
 
         name.setText(event.getName());
-        EventStatus eventStatus = EventStatus.fromId(event.getStatus());
+        final EventStatus eventStatus = EventStatus.fromId(event.getStatus());
+        if(eventStatus == null) {
+            Log.wtf("EventAdapter", "Event status was null with event " + event + ", deleting it to prevent anything else from happening!");
+            DatabaseHandler.getInstance().deleteEvent(event.getId());
+            return null;
+        }
 
         status.setText(eventStatus.getRepresentation());
         status.setTextColor(eventStatus.getColor());
+        status.setClickable(true);
+        status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertUtils.showSpinnerPrompt(getContext(), "Change Status", new EventStatusAdapter(getContext()), new OnSpinnerAcceptListener<EventStatus>() {
+                    @Override
+                    public void accept(EventStatus choice, int choiceId) {
+                        choice.displayOnTV(status);
+                        event.setStatus(choice.getId());
+                        DatabaseHandler.getInstance().setEventStatus(event.getId(), choice.getId());
+                    }
+                }, event.getStatus());
+            }
+        });
 
         deadline.setDate(event.getDeadline());
 
@@ -57,13 +82,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
                                 Toast.makeText(getContext(), "Successfully removed event", Toast.LENGTH_LONG).show();
                             }
                         });
-            }
-        });
-
-        changeStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Changing Status For Project", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -38,6 +38,8 @@ public class EventsActivity extends AbstractActivity {
     }
 
     public void addEvent(View view) {
-        switchToActivity(NewEventActivity.class, false, Constants.EXTRA_PROJECT_OBJ, project);
+        Event newEvent = new Event(project.getId(), "Event " + (eventAdapter.getCount() + 1), EventStatus.TO_DO.getId(), System.currentTimeMillis() - 1000);
+        db.addEvent(newEvent);
+        this.eventAdapter.add(newEvent);
     }
 }
