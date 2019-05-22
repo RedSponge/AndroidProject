@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.redsponge.mycoolapp.project.Project;
 import com.redsponge.mycoolapp.project.category.Category;
 import com.redsponge.mycoolapp.project.event.Event;
+import com.redsponge.mycoolapp.project.event.EventStatus;
 import com.redsponge.mycoolapp.project.invite.Invite;
 import com.redsponge.mycoolapp.user.User;
 import com.redsponge.mycoolapp.utils.Constants;
@@ -159,7 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         int id = c.getInt(0);
         c.close();
-
+        db.close();
 
         return id;
     }
@@ -173,7 +174,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updateUserName(int id, String name) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE users SET user_name = ? WHERE user_id = ?", new Object[]{name, id});
-
+        db.close();
     }
 
     /**
@@ -185,7 +186,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updatePassword(int id, int pw) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE users SET user_password = ? WHERE user_id = ?", new Object[]{pw, id});
-
+        db.close();
     }
 
     /**
@@ -217,6 +218,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void unlinkProjectFromUser(int project, int user) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM project_groups WHERE proj_id = " + project + " AND user_id = " + user);
+        db.close();
 
         unlinkProjectFromUserCategories(project, user);
     }
@@ -262,7 +264,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         int id = c.getInt(0);
         c.close();
-
+        db.close();
 
         return id;
     }
@@ -277,7 +279,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void linkProjectToUser(int project, int user, boolean isAdmin) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO project_groups (user_id, proj_id, admin) VALUES(?, ?, ?)", new Object[]{user, project, isAdmin ? 1 : 0});
-
+        db.close();
     }
 
     /**
@@ -291,6 +293,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM projects WHERE proj_id = " + id);
         db.execSQL("DELETE FROM project_groups WHERE proj_id = " + id);
         db.execSQL("DELETE FROM events WHERE event_project = " + id);
+        db.close();
     }
 
     /**
@@ -324,7 +327,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updateProjectDescription(int id, String description) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE projects SET proj_description = ? WHERE proj_id = ?", new Object[]{description, id});
-
+        db.close();
     }
 
 
@@ -394,7 +397,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void setProjectIcon(int project, String base64) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE projects SET proj_icon = ? WHERE proj_id = ?", new Object[]{base64, project});
-
+        db.close();
     }
 
     /**
@@ -405,7 +408,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void setProjectName(int project, String name) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE projects SET proj_name = ? WHERE proj_id = ?", new Object[]{name, project});
-
+        db.close();
     }
     // endregion
 
@@ -418,7 +421,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addInvite(Invite invite) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO invites (from_id, to_id, proj_id, should_be_admin) VALUES (?, ?, ?, ?)", new Object[]{invite.getIdFrom(), invite.getIdTo(), invite.getProjectId(), invite.getShouldBeAdmin()});
-
+        db.close();
     }
 
     /**
@@ -487,7 +490,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void removeInvite(Invite invite) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM invites WHERE from_id = ? AND to_id = ? AND proj_id = ?", new Object[]{invite.getIdFrom(), invite.getIdTo(), invite.getProjectId()});
-
+        db.close();
     }
 
     // endregion
@@ -542,7 +545,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addCategory(Category c) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("INSERT INTO categories (category_name, user_id) VALUES(?, ?)", new Object[]{c.getName(), c.getUser()});
-
+        db.close();
     }
 
 
@@ -584,7 +587,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (category != Constants.CATEGORY_ALL_ID)
             db.execSQL("INSERT INTO category_links (proj_id, category_id) VALUES(?, ?)", new Object[]{project, category});
 
-
+        db.close();
     }
 
     /**
@@ -601,7 +604,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "INNER JOIN categories ON categories.user_id = ? and category_links.proj_id = ?\n" +
                 "WHERE categories.category_id = category_links.category_id\n" +
                 ")\n", new Object[]{user, project});
-
+        db.close();
     }
 
     /**
@@ -627,8 +630,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         c.close();
-
-
         return projects;
     }
 
@@ -663,13 +664,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM category_links WHERE category_id = " + category);
         db.execSQL("DELETE FROM categories WHERE category_id = " + category);
-
+        db.close();
     }
 
     // endregion
 
+    // region events
     /**
-     * Finds all event for a project
+     * Finds all event for a project, sorted by deadline
      * @param project The project to search events for
      * @param blacklistedStatuses Which statuses should be blacklisted
      * @return The events matching the project
@@ -715,22 +717,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw new RuntimeException("Couldn't Find Id! This should never happen!");
         }
 
+        db.close();
         c.close();
         return id;
     }
 
+    /**
+     * Deletes an event from the database
+     * @param eventId The event's id
+     */
     public void deleteEvent(int eventId) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM events WHERE event_id = " + eventId);
+        db.close();
     }
 
-    public void setEventName(int eventId, String input) {
+    /**
+     * Sets an event's name to a new one
+     * @param eventId The event's id
+     * @param name The new name
+     */
+    public void setEventName(int eventId, String name) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("UPDATE events SET event_name = ? WHERE event_id = ?", new Object[] {input, eventId});
+        db.execSQL("UPDATE events SET event_name = ? WHERE event_id = ?", new Object[] {name, eventId});
+        db.close();
     }
 
+    /**
+     * Sets an event's status to a new one
+     * @param eventId The event's id
+     * @param status The new status, usually would be retrieved from {@link EventStatus#getId()}
+     */
     public void setEventStatus(int eventId, int status) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("UPDATE events SET event_status = ? WHERE event_id = ?", new Object[] {status, eventId});
+        db.close();
     }
+
+    public void setEventDeadline(int eventId, long millis) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE events SET event_time = ? WHERE event_id = ?", new Object[] {millis, eventId});
+        db.close();
+    }
+
+    // endregion
 }

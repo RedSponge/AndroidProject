@@ -18,6 +18,7 @@ import com.redsponge.mycoolapp.utils.views.DateTextView;
 import com.redsponge.mycoolapp.utils.views.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
+import com.redsponge.mycoolapp.utils.views.TVDateChangedListener;
 
 import java.util.logging.Logger;
 
@@ -96,6 +97,14 @@ public class EventAdapter extends ArrayAdapter<Event> {
             public void onTextEntered(DialogInterface dialog, String input) {
                 Log.i("EventAdapter", "Accepted text " + input);
                 DatabaseHandler.getInstance().setEventName(event.getId(), input);
+            }
+        });
+
+        deadline.setDate(event.getDeadline());
+        deadline.setDateChangedListener(new TVDateChangedListener() {
+            @Override
+            public void changed(long millis) {
+                DatabaseHandler.getInstance().setEventDeadline(event.getId(), millis);
             }
         });
 

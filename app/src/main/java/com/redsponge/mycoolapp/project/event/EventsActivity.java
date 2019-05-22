@@ -65,4 +65,8 @@ public class EventsActivity extends AbstractActivity {
         db.addEvent(newEvent);
         updateEventAdapter();
     }
+
+    public void refreshView(View view) {
+        updateEventAdapter();
+    }
 }
