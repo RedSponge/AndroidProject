@@ -693,6 +693,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return lst;
     }
 
+
     /**
      * Adds a new event to the database
      * @param event The new event to add

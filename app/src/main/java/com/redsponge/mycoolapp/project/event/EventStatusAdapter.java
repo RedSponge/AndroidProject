@@ -28,6 +28,7 @@ public class EventStatusAdapter extends ArrayAdapter<EventStatus> implements Spi
             Log.wtf("EventStatusAdapter", "Unknown event status position:" + position);
             return null;
         }
+        Log.i("Test", "Displaying " + eventStatus);
 
         TextView displayed = (TextView) convertView.findViewById(android.R.id.text1);
         eventStatus.displayOnTV(displayed);

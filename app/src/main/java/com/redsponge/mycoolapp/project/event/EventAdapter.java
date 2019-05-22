@@ -19,6 +19,12 @@ import com.redsponge.mycoolapp.utils.views.EditableTextView;
 import com.redsponge.mycoolapp.utils.alert.AlertUtils;
 import com.redsponge.mycoolapp.utils.alert.OnTextAcceptListener;
 
+import java.util.logging.Logger;
+
+/**
+ * An event adapter for a {@link android.widget.ListView}.
+ * shows events, and allows changing and deleting them
+ */
 public class EventAdapter extends ArrayAdapter<Event> {
 
     public EventAdapter(Context context) {
@@ -88,6 +94,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         name.setTextAcceptListener(new OnTextAcceptListener() {
             @Override
             public void onTextEntered(DialogInterface dialog, String input) {
+                Log.i("EventAdapter", "Accepted text " + input);
                 DatabaseHandler.getInstance().setEventName(event.getId(), input);
             }
         });

@@ -30,7 +30,7 @@ public class ProjectPlaceholders {
             "Never gonna give you up",
             "Never gonna let you down",
             "Never gonna run around",
-            "And dessert you"
+            "And desert you"
     };
 
     public static final String[] RANDOM_DESCRIPTIONS = {
@@ -44,12 +44,13 @@ public class ProjectPlaceholders {
             "Now in 3D!",
             "Now in 4D!",
             "Now in 2,147,483,647D!",
+
             "Template Description",
             "Funny Joke",
             "Why did the chicken cross the road?",
             "The ultimate betrayal",
             "| || || |_",
-            "^  This is the name ^",
+            "^ This is the name ^",
             "Somebody once told me",
             "The world is gonna roll me"
     };
