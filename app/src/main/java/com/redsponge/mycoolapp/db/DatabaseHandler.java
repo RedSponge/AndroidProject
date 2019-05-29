@@ -678,13 +678,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public List<Event> getEventsForProject(int project, int... blacklistedStatuses) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = "SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project;
+        StringBuilder query = new StringBuilder("SELECT event_id, event_project, event_name, event_status, event_time FROM events WHERE event_project = " + project);
         for (int blacklistedStatus : blacklistedStatuses) {
-            query += " AND event_status <> " + blacklistedStatus;
+            query.append(" AND event_status <> ").append(blacklistedStatus);
         }
-        query += " ORDER BY event_time";
-        Log.i("DatabaseHandler", query);
-        Cursor c = db.rawQuery(query, null);
+        query.append(" ORDER BY event_time");
+        Log.i("DatabaseHandler", query.toString());
+        Cursor c = db.rawQuery(query.toString(), null);
 
         ArrayList<Event> lst = new ArrayList<>();
         while(c.moveToNext()) {
