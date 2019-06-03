@@ -235,8 +235,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<Project> getAllProjects(int user) {
         ArrayList<Project> projects = new ArrayList<>();
 
-        final Cursor cursor = getReadableDatabase().rawQuery("SELECT projects.proj_id, projects.proj_name, projects.proj_description FROM users " +
-                "INNER JOIN project_groups, projects on users.user_id = project_groups.user_id AND projects.proj_id = project_groups.proj_id " +
+        final Cursor cursor = getReadableDatabase().rawQuery("SELECT projects.proj_id, projects.proj_name, projects.proj_description FROM projects " +
+                "INNER JOIN project_groups, users ON users.user_id = project_groups.user_id AND projects.proj_id = project_groups.proj_id " +
                 "WHERE users.user_id = " + user, null);
 
         while (cursor.moveToNext()) {
