@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project Manager</string>
+    <string name="app_name">AM-PM</string>
 
     <string name="enter_project">Enter</string>
     <string name="placeholder_description">A description of the project</string>
